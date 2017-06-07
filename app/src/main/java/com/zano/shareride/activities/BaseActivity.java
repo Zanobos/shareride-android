@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    private static final String TAG = "BaseActivity";
+    private static String TAG;
 
     @BindView(R.id.my_toolbar) protected Toolbar toolbar;
 
@@ -26,6 +26,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TAG = setTag();
         setContentView(layoutId());
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
@@ -55,5 +56,10 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @return the id referencing the layout to use for this activity
      */
     protected abstract int layoutId();
+
+    /**
+     * @return the Tag of the activity. In this way at least I am forced to initialize it
+     */
+    protected abstract String setTag();
 
 }
