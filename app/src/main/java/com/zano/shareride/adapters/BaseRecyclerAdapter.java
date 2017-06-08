@@ -46,7 +46,7 @@ public abstract class BaseRecyclerAdapter<MVH extends BaseRecyclerAdapter.ViewHo
         return data.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public abstract class ViewHolder extends RecyclerView.ViewHolder {
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
