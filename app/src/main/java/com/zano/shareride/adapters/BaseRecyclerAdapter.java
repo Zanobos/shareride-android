@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 
 public abstract class BaseRecyclerAdapter<MVH extends BaseRecyclerAdapter.ViewHolder, D> extends RecyclerView.Adapter<BaseRecyclerAdapter.ViewHolder> {
 
+    protected String TAG;
     protected Context context;
     protected int listItemLayoutId;
     protected Map<String, D> data;
@@ -25,6 +26,7 @@ public abstract class BaseRecyclerAdapter<MVH extends BaseRecyclerAdapter.ViewHo
         this.context = context;
         this.listItemLayoutId = listItemLayoutId;
         this.data = data;
+        this.TAG = setTag();
     }
 
     @Override
@@ -56,5 +58,8 @@ public abstract class BaseRecyclerAdapter<MVH extends BaseRecyclerAdapter.ViewHo
     protected abstract MVH createViewHolder(View itemView);
 
     protected abstract void onBindViewHolder(MVH holder,D data);
+
+    protected abstract String setTag();
+
 
 }

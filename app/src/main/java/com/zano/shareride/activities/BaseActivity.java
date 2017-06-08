@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    private static String TAG;
+    protected static String TAG;
 
     @BindView(R.id.my_toolbar) protected Toolbar toolbar;
 

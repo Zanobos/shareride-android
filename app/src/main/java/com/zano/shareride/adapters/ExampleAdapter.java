@@ -1,6 +1,7 @@
 package com.zano.shareride.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,11 +15,11 @@ import butterknife.BindView;
  * Created by Zano on 07/06/2017, 18:47.
  */
 
-public class ExampleAdapter extends BaseRecyclerAdapter<ExampleAdapter.ViewHolder, String> {
+public class ExampleAdapter extends FirebaseRecyclerAdapter<ExampleAdapter.ViewHolder, String> {
 
 
     public ExampleAdapter(Context context, int listItemLayoutId, Map<String, String> data) {
-        super(context, listItemLayoutId, data);
+        super(context, listItemLayoutId, data, "prova/examples",String.class);
     }
 
     @Override
@@ -29,6 +30,16 @@ public class ExampleAdapter extends BaseRecyclerAdapter<ExampleAdapter.ViewHolde
     @Override
     protected void onBindViewHolder(ViewHolder holder, String data) {
         holder.textViewExample.setText(data);
+    }
+
+    @Override
+    protected String setTag() {
+        return "ExampleAdapter";
+    }
+
+    @Override
+    protected void updatedData(String value) {
+        Log.d(TAG,"Changed: " + value);
     }
 
     public class ViewHolder extends BaseRecyclerAdapter.ViewHolder {

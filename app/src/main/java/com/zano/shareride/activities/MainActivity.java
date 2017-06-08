@@ -25,10 +25,6 @@ public class MainActivity extends BaseActivity {
         Map<String,String> map = new LinkedHashMap<>();
         adapter = new ExampleAdapter(this,R.layout.listitem_example,map);
         recyclerView.setAdapter(adapter);
-        map.put("1","one");
-        map.put("2","two");
-        map.put("3","three");
-        adapter.notifyDataSetChanged();
     }
 
     @Override
