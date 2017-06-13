@@ -33,7 +33,7 @@ public abstract class BaseFragment extends Fragment {
     protected abstract int layoutId();
 
     /**
-     * @return the Tag of the activity. In this way at least I am forced to initialize it
+     * @return the Tag of the fragment. In this way at least I am forced to initialize it
      */
     protected abstract String setTag();
 }

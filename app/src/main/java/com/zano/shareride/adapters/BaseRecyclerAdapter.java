@@ -13,8 +13,8 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Zano on 07/06/2017, 17:59.
+ * This class is the base for every recycler adapter, it sets some fields
  */
-
 public abstract class BaseRecyclerAdapter<MVH extends BaseRecyclerAdapter.ViewHolder, D> extends RecyclerView.Adapter<BaseRecyclerAdapter.ViewHolder> {
 
     protected String TAG;

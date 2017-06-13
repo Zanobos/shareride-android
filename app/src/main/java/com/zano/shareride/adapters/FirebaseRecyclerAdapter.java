@@ -13,8 +13,8 @@ import java.util.Map;
 
 /**
  * Created by Zano on 08/06/2017, 11:50.
+ * This class take care of displaying data from firebase in a list, and it keeps the list updated
  */
-
 public abstract class FirebaseRecyclerAdapter<FMVH extends BaseRecyclerAdapter.ViewHolder,FD> extends BaseRecyclerAdapter<FMVH,FD> implements ChildEventListener {
 
     private DatabaseReference reference;
