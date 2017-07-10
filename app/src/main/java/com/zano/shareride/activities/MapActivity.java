@@ -1,7 +1,14 @@
 package com.zano.shareride.activities;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -10,18 +17,34 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.zano.shareride.R;
 
-public class MapActivity extends BaseActivity implements OnMapReadyCallback {
+public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
     private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        showProgressDialog("Authenticating...");
     }
+
+    @Override
+    protected GoogleApiClient.OnConnectionFailedListener getFailedConnectionListener() {
+        return this;
+    }
+
+    @Override
+    protected GoogleApiClient.ConnectionCallbacks getConnectionCallback() {
+        return this;
+    }
+
+    @Override
+    protected GoogleApiClient.Builder loadApi(GoogleApiClient.Builder builder) {
+        return builder
+                .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API);
+    }
+
 
     @Override
     protected int layoutId() {
@@ -48,8 +71,30 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng turin = new LatLng(45.116177, 7.742615);
+        mMap.addMarker(new MarkerOptions().position(turin).title("Marker in Turin"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(turin));
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "Play services connection failed: ConnectionResult.getErrorCode() = "
+                + connectionResult.getErrorCode());
+        closeProgressDialog();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        // Build the map.
+        Log.d(TAG, "Play services connected");
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+        closeProgressDialog();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d(TAG, "Play services connection suspended");
     }
 }
