@@ -1,12 +1,16 @@
 package com.zano.shareride.activities;
 
 import android.app.ProgressDialog;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.zano.shareride.R;
+import com.zano.shareride.constants.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +48,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    public void closeProgressDialog() {
+    protected void closeProgressDialog() {
         if(progressDialog != null) {
             progressDialog.dismiss();
         } else {
@@ -52,6 +56,30 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * If this method is used and request code is != from Constants.RequestCodes.NO_PERMISSION_REQUEST
+     * then onRequestPermissionsResult() must be implemented to have a result
+     * @param permission the permission that needs to be checked or retrieved
+     * @param requestCode the request code that will be used in the callback
+     * @return true if the permission has been already given
+     */
+    protected boolean checkPermissions(String permission, @Constants.RequestCodes int requestCode) {
+        boolean result = false;
+        Log.d(TAG, "checkPermissions. Permission:" + permission + ", requestCode: " + requestCode);
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), permission)
+                == PackageManager.PERMISSION_GRANTED) {
+            result = true;
+            Log.d(TAG, "checkPermissions. Permission granted");
+        } else if(requestCode != Constants.RequestCodes.NO_PERMISSION_REQUEST) {
+            Log.d(TAG, "checkPermissions. Permission not granted, asking the user");
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{permission},
+                    requestCode);
+        }
+
+        return result;
+    }
     /**
      * @return the id referencing the layout to use for this activity
      */

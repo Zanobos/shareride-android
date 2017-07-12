@@ -1,5 +1,6 @@
 package com.zano.shareride.constants;
 
+import android.support.annotation.IntDef;
 import android.support.annotation.StringDef;
 
 /**
@@ -11,5 +12,15 @@ public class Constants {
     @StringDef({ParcelArgs.NAMECLASS})
     public @interface ParcelArgs {
         String NAMECLASS = "NAMECLASS";
+        String LOCATION = "LOCATION";
+        String CAMERA_POSITION = "CAMERA_POSITION";
+    }
+
+    @IntDef({
+            RequestCodes.NO_PERMISSION_REQUEST,
+            RequestCodes.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION})
+    public @interface RequestCodes {
+        int NO_PERMISSION_REQUEST = 0;
+        int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     }
 }

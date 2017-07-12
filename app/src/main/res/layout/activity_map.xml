@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
-    android:fitsSystemWindows="true"
-    tools:context="com.zano.shareride.activities.MainActivity">
+    android:fitsSystemWindows="true">
 
     <include layout="@layout/item_toolbar" />
 

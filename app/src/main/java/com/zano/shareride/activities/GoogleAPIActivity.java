@@ -10,7 +10,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 public abstract class GoogleAPIActivity extends BaseActivity {
 
-    private GoogleApiClient mGoogleApiClient;
+    protected GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
