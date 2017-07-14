@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.zano.shareride.R;
 import com.zano.shareride.constants.Constants;
@@ -37,6 +38,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Infinite waiting dialog
+     * @param message
+     */
     protected void showProgressDialog(String message) {
         if(progressDialog == null) {
             progressDialog = new ProgressDialog(BaseActivity.this);
@@ -48,12 +53,32 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Infinite waiting dialog close
+     */
     protected void closeProgressDialog() {
         if(progressDialog != null) {
             progressDialog.dismiss();
         } else {
             Log.d(TAG, "onCloseProgressDialog:dialog not active");
         }
+    }
+
+    /**
+     * Show toast
+     * @param message
+     * @param lengthLong
+     */
+    public void showToast(String message, boolean lengthLong) {
+        int length = lengthLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
+        Log.d(TAG, "showToast: message <" + message + ">");
+        Toast.makeText(this, message,length).show();
+    }
+
+    public void showToast(int resId, boolean lengthLong) {
+        int length = lengthLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
+        Log.d(TAG, "showToast: using resource: " + resId);
+        Toast.makeText(this, resId,length).show();
     }
 
     /**
