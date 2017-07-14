@@ -134,7 +134,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
 
         mLocationPermissionGranted = checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Constants.RequestCodes.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
 
-        if(mLocationPermissionGranted) {
+            if(mLocationPermissionGranted) {
             mLastKnownLocation = LocationServices.FusedLocationApi
                     .getLastLocation(mGoogleApiClient);
         }
