@@ -16,8 +16,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.zano.shareride.R;
 import com.zano.shareride.constants.Constants;
@@ -32,12 +34,23 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
     private Location mLastKnownLocation;
     private boolean mLocationPermissionGranted;
     private CameraPosition mCameraPosition;
+    private MarkerOptions markerOptStart;
+    private MarkerOptions markerOptFinish;
+
+    private Marker markerStart;
+    private Marker markerFinish;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         showProgressDialog("Authenticating...");
         mLocationPermissionGranted = false;
+        markerOptStart = new MarkerOptions().title("Start").icon(BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        markerOptFinish = new MarkerOptions().title("Finish").icon(BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        markerStart = null;
+        markerFinish = null;
     }
 
     @Override
@@ -102,12 +115,58 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        mMap.addMarker(new MarkerOptions().position(mDefaultLocation).title("Marker in Turin"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation,DEFAULT_ZOOM));
-        
         updateLocationUI();
         
         getDeviceLocation();
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(LatLng newLatLon) {
+                MarkerOptions markerOptions = null;
+                if(markerStart == null){
+                    markerOptions = markerOptStart;
+                } else if(markerFinish == null){
+                    markerOptions = markerOptFinish;
+                }
+
+                if(markerOptions!= null) {
+                    Marker marker = mMap.addMarker(markerOptions.position(newLatLon));
+                    marker.showInfoWindow();
+                    if(markerStart == null) {
+                        markerStart = marker;
+                    } else if (markerFinish == null){
+                        markerFinish = marker;
+                    }
+                } else {
+                    showToast(R.string.toast_map_warning,false);
+                }
+            }
+        });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                String title = marker.getTitle();
+                if(markerStart != null && title.equals(markerStart.getTitle())){
+                    markerStart.remove();
+                    markerStart = null;
+                } else if (markerFinish != null && title.equals(markerFinish.getTitle())){
+                    markerFinish.remove();
+                    markerFinish = null;
+                }
+
+                return true;
+            }
+        });
+
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+
+            }
+        });
+
     }
 
     @SuppressWarnings("MissingPermission")
