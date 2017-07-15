@@ -3,4 +3,6 @@
     <string name="title_activity_map">Map</string>
     <string name="map">MAP</string>
     <string name="toast_map_warning">You have already placed start and end!</string>
+    <string name="confirm_button_text">Confirm!</string>
+    <string name="check_button_text">Check availability</string>
 </resources>

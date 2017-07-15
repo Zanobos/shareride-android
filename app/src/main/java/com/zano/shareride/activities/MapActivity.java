@@ -7,11 +7,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Button;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,6 +28,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.zano.shareride.R;
 import com.zano.shareride.constants.Constants;
+
+import butterknife.BindView;
 
 public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
 
@@ -40,6 +47,9 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
     private Marker markerStart;
     private Marker markerFinish;
 
+    @BindView(R.id.check_button) protected Button checkButton;
+    @BindView(R.id.confirm_button) protected Button confirmButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +61,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
                 .defaultMarker(BitmapDescriptorFactory.HUE_RED));
         markerStart = null;
         markerFinish = null;
+
     }
 
     @Override
@@ -116,31 +127,14 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         updateLocationUI();
-        
+
         getDeviceLocation();
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
             public void onMapClick(LatLng newLatLon) {
-                MarkerOptions markerOptions = null;
-                if(markerStart == null){
-                    markerOptions = markerOptStart;
-                } else if(markerFinish == null){
-                    markerOptions = markerOptFinish;
-                }
-
-                if(markerOptions!= null) {
-                    Marker marker = mMap.addMarker(markerOptions.position(newLatLon));
-                    marker.showInfoWindow();
-                    if(markerStart == null) {
-                        markerStart = marker;
-                    } else if (markerFinish == null){
-                        markerFinish = marker;
-                    }
-                } else {
-                    showToast(R.string.toast_map_warning,false);
-                }
+                putMarkerOnMap(newLatLon);
             }
         });
 
@@ -148,42 +142,96 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
             @Override
             public boolean onMarkerClick(Marker marker) {
                 String title = marker.getTitle();
-                if(markerStart != null && title.equals(markerStart.getTitle())){
+                if (markerStart != null && title.equals(markerStart.getTitle())) {
                     markerStart.remove();
                     markerStart = null;
-                } else if (markerFinish != null && title.equals(markerFinish.getTitle())){
+                } else if (markerFinish != null && title.equals(markerFinish.getTitle())) {
                     markerFinish.remove();
                     markerFinish = null;
                 }
+
+                enableButtons();
 
                 return true;
             }
         });
 
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // Get info about the selected place and move the camera
+                if (mMap == null) {
+                    return;
+                }
+
+                boolean set = putMarkerOnMap(place.getLatLng());
+                if (set) {
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), DEFAULT_ZOOM));
+                }
+
+            }
+
+            @Override
+            public void onError(Status status) {
+                showToast("failure", true);
             }
         });
 
     }
 
+    private void enableButtons() {
+        if (markerStart != null && markerFinish != null) {
+            checkButton.setEnabled(true);
+        } else {
+            checkButton.setEnabled(false);
+        }
+    }
+
+    private boolean putMarkerOnMap(LatLng newLatLon) {
+        boolean set = false;
+        MarkerOptions markerOptions = null;
+        if (markerStart == null) {
+            markerOptions = markerOptStart;
+        } else if (markerFinish == null) {
+            markerOptions = markerOptFinish;
+        }
+
+        if (markerOptions != null) {
+            Marker marker = mMap.addMarker(markerOptions.position(newLatLon));
+            marker.showInfoWindow();
+            if (markerStart == null) {
+                markerStart = marker;
+            } else if (markerFinish == null) {
+                markerFinish = marker;
+            }
+            set = true;
+        } else {
+            showToast(R.string.toast_map_warning, false);
+        }
+
+        enableButtons();
+
+        return set;
+    }
+
     @SuppressWarnings("MissingPermission")
     private void updateLocationUI() {
 
-        if(mMap==null) {
+        if (mMap == null) {
             return;
         }
 
         mLocationPermissionGranted = checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Constants.RequestCodes.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
 
-        if(mLocationPermissionGranted) {
+        if (mLocationPermissionGranted) {
             mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
         } else {
             mMap.setMyLocationEnabled(false);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
             mLastKnownLocation = null;
         }
     }
@@ -193,7 +241,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
 
         mLocationPermissionGranted = checkPermissions(Manifest.permission.ACCESS_FINE_LOCATION, Constants.RequestCodes.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
 
-            if(mLocationPermissionGranted) {
+        if (mLocationPermissionGranted) {
             mLastKnownLocation = LocationServices.FusedLocationApi
                     .getLastLocation(mGoogleApiClient);
         }
@@ -208,7 +256,6 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         } else {
             Log.d(TAG, "Current location is null. Using defaults.");
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
     }
 
@@ -217,7 +264,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         mLocationPermissionGranted = false;
-        switch (requestCode)  {
+        switch (requestCode) {
             case Constants.RequestCodes.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
@@ -241,7 +288,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         // Build the map.
         Log.d(TAG, "Play services connected");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(this);
         closeProgressDialog();
     }
