@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
@@ -28,6 +31,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.zano.shareride.R;
 import com.zano.shareride.constants.Constants;
+import com.zano.shareride.network.NetworkController;
+import com.zano.shareride.network.checkpath.CheckPathRequest;
+import com.zano.shareride.network.common.AdditionalInfo;
+import com.zano.shareride.network.common.UserInfo;
+
+import org.json.JSONObject;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 import butterknife.BindView;
 
@@ -47,6 +59,8 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
     private Marker markerStart;
     private Marker markerFinish;
 
+    private boolean routeChecked;
+
     @BindView(R.id.check_button) protected Button checkButton;
     @BindView(R.id.confirm_button) protected Button confirmButton;
 
@@ -61,7 +75,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
                 .defaultMarker(BitmapDescriptorFactory.HUE_RED));
         markerStart = null;
         markerFinish = null;
-
+        routeChecked = false;
     }
 
     @Override
@@ -113,15 +127,6 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         mLastKnownLocation = savedInstanceState.getParcelable(Constants.ParcelArgs.LOCATION);
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -134,7 +139,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
 
             @Override
             public void onMapClick(LatLng newLatLon) {
-                putMarkerOnMap(newLatLon);
+                putMarkerOnMap(newLatLon, null);
             }
         });
 
@@ -168,7 +173,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
                     return;
                 }
 
-                boolean set = putMarkerOnMap(place.getLatLng());
+                boolean set = putMarkerOnMap(place.getLatLng(), place);
                 if (set) {
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), DEFAULT_ZOOM));
                 }
@@ -181,6 +186,72 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
             }
         });
 
+        checkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                CheckPathRequest checkPathRequest = createCheckPathRequest(false,new Date());
+                showProgressDialog("Checking...");
+                NetworkController.getInstance(MapActivity.this).addCheckPathRequest(checkPathRequest, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        closeProgressDialog();
+                        //TODO check response
+                        showToast("Path available!",false);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgressDialog();
+                        Log.e(TAG, "onErrorResponse:" + error.getMessage(),error);
+                        showToast("An error occured!",false);
+                    }
+                });
+            }
+        });
+
+    }
+
+    private CheckPathRequest createCheckPathRequest(boolean deliveryTime, Date date) {
+        CheckPathRequest checkPathRequest = new CheckPathRequest();
+
+        AdditionalInfo additionalInfo = new AdditionalInfo();
+        additionalInfo.setNeedAssistance(false);
+        additionalInfo.setNumberOfSeats(1);
+        checkPathRequest.setAdditionalInfo(additionalInfo);
+
+        com.zano.shareride.network.common.Location pickup = new com.zano.shareride.network.common.Location();
+        pickup.setLon(BigDecimal.valueOf(markerStart.getPosition().longitude).setScale(Constants.Scale.LATLONG, BigDecimal.ROUND_HALF_UP).doubleValue());
+        pickup.setLat(BigDecimal.valueOf(markerStart.getPosition().latitude).setScale(Constants.Scale.LATLONG, BigDecimal.ROUND_HALF_UP).doubleValue());
+        if(markerStart.getTag()!=null){
+            Place place = (Place) markerStart.getTag();
+            pickup.setAddress(place.getAddress().toString());
+            pickup.setLocationName(place.getName().toString());
+        }
+        checkPathRequest.setPickup(pickup);
+
+        com.zano.shareride.network.common.Location delivery = new com.zano.shareride.network.common.Location();
+        delivery.setLon(BigDecimal.valueOf(markerFinish.getPosition().longitude).setScale(Constants.Scale.LATLONG, BigDecimal.ROUND_HALF_UP).doubleValue());
+        delivery.setLat(BigDecimal.valueOf(markerFinish.getPosition().latitude).setScale(Constants.Scale.LATLONG, BigDecimal.ROUND_HALF_UP).doubleValue());
+        if(markerFinish.getTag()!=null){
+            Place place = (Place) markerFinish.getTag();
+            delivery.setAddress(place.getAddress().toString());
+            delivery.setLocationName(place.getName().toString());
+        }
+        checkPathRequest.setDelivery(delivery);
+
+        if(deliveryTime) {
+            delivery.setTime(date.getTime());
+        } else {
+            pickup.setTime(date.getTime());
+        }
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setName("Andrea Zanotti"); //TODO
+        userInfo.setUserId("ZANO"); //TODO
+        checkPathRequest.setUserInfo(userInfo);
+
+        return checkPathRequest;
     }
 
     private void enableButtons() {
@@ -189,9 +260,12 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         } else {
             checkButton.setEnabled(false);
         }
+        if(routeChecked) {
+            confirmButton.setEnabled(true);
+        }
     }
 
-    private boolean putMarkerOnMap(LatLng newLatLon) {
+    private boolean putMarkerOnMap(LatLng newLatLon, Place place) {
         boolean set = false;
         MarkerOptions markerOptions = null;
         if (markerStart == null) {
@@ -203,6 +277,10 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         if (markerOptions != null) {
             Marker marker = mMap.addMarker(markerOptions.position(newLatLon));
             marker.showInfoWindow();
+            if(place != null) {
+                marker.setTag(place);
+            }
+
             if (markerStart == null) {
                 markerStart = marker;
             } else if (markerFinish == null) {

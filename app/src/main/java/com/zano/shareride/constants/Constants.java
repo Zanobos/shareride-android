@@ -23,4 +23,10 @@ public class Constants {
         int NO_PERMISSION_REQUEST = 0;
         int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     }
+
+    @IntDef({
+            Scale.LATLONG})
+    public @interface Scale {
+        int LATLONG = 6;
+    }
 }
