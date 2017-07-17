@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.zano.shareride.R;
 import com.zano.shareride.constants.Constants;
+import com.zano.shareride.fragments.RouteDetailsFragment;
 import com.zano.shareride.network.NetworkController;
 import com.zano.shareride.network.checkpath.CheckPathRequest;
 import com.zano.shareride.network.common.AdditionalInfo;
@@ -43,7 +44,7 @@ import java.util.Date;
 
 import butterknife.BindView;
 
-public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, RouteDetailsFragment.RouteDetailsFragmentListener{
 
     private static final int DEFAULT_ZOOM = 15;
     private final LatLng mDefaultLocation = new LatLng(45.116177, 7.74261);
@@ -190,34 +191,19 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
 
-                CheckPathRequest checkPathRequest = createCheckPathRequest(false,new Date());
-                showProgressDialog("Checking...");
-                NetworkController.getInstance(MapActivity.this).addCheckPathRequest(checkPathRequest, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        closeProgressDialog();
-                        //TODO check response
-                        showToast("Path available!",false);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        closeProgressDialog();
-                        Log.e(TAG, "onErrorResponse:" + error.getMessage(),error);
-                        showToast("An error occured!",false);
-                    }
-                });
+                RouteDetailsFragment routeDetailsFragment = new RouteDetailsFragment();
+                routeDetailsFragment.show(getSupportFragmentManager(),"RouteDetailsFragment");
             }
         });
 
     }
 
-    private CheckPathRequest createCheckPathRequest(boolean deliveryTime, Date date) {
+    private CheckPathRequest createCheckPathRequest(boolean deliveryTime, int numberOfSeats, int year, int month, int dayOfMoth, int hour, int minute) {
         CheckPathRequest checkPathRequest = new CheckPathRequest();
 
         AdditionalInfo additionalInfo = new AdditionalInfo();
         additionalInfo.setNeedAssistance(false);
-        additionalInfo.setNumberOfSeats(1);
+        additionalInfo.setNumberOfSeats(numberOfSeats);
         checkPathRequest.setAdditionalInfo(additionalInfo);
 
         com.zano.shareride.network.common.Location pickup = new com.zano.shareride.network.common.Location();
@@ -241,9 +227,9 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         checkPathRequest.setDelivery(delivery);
 
         if(deliveryTime) {
-            delivery.setTime(date.getTime());
+            delivery.setTime(new Date().getTime()); //TODO
         } else {
-            pickup.setTime(date.getTime());
+            pickup.setTime(new Date().getTime()); //TODO
         }
 
         UserInfo userInfo = new UserInfo();
@@ -374,5 +360,32 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
     @Override
     public void onConnectionSuspended(int i) {
         Log.d(TAG, "Play services connection suspended");
+    }
+
+    @Override
+    public void onDialogPositiveClick(int numberOfSeats, int year, int month, int dayOfMonth, int hourOfDay, int minute) {
+        Log.d(TAG, "onDialogPositiveClick");
+        CheckPathRequest checkPathRequest = createCheckPathRequest(false,numberOfSeats, year,month ,dayOfMonth,hourOfDay , minute);
+        showProgressDialog("Checking...");
+        NetworkController.getInstance(MapActivity.this).addCheckPathRequest(checkPathRequest, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                closeProgressDialog();
+                //TODO check response
+                showToast("Path available!",false);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                closeProgressDialog();
+                Log.e(TAG, "onErrorResponse:" + error.getMessage(),error);
+                showToast("An error occured!",false);
+            }
+        });
+    }
+
+    @Override
+    public void onDialogNegativeClick() {
+        Log.d(TAG, "onDialogPositiveClick");
     }
 }

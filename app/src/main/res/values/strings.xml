@@ -5,4 +5,8 @@
     <string name="toast_map_warning">You have already placed start and end!</string>
     <string name="confirm_button_text">Confirm!</string>
     <string name="check_button_text">Check availability</string>
+    <string name="check">Check route</string>
+    <string name="cancel">Cancel</string>
+    <string name="fragment_route_details_number_of_seats">Pick the number of seats</string>
+    <string name="fragment_route_details_date">Choose the date</string>
 </resources>
