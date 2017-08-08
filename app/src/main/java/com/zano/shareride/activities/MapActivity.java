@@ -1,8 +1,12 @@
 package com.zano.shareride.activities;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +19,8 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
@@ -44,9 +50,14 @@ import java.util.Date;
 
 import butterknife.BindView;
 
-public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, RouteDetailsFragment.RouteDetailsFragmentListener{
+public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback,
+        GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
+        RouteDetailsFragment.RouteDetailsFragmentListener, LocationListener {
 
     private static final int DEFAULT_ZOOM = 15;
+    private static final int INTERVAL_UPDATE = 10;
+    private static final int FASTEST_INTERVAL_UPDATE = 1;
+    private static final int SECOND_IN_MILLISECONDS = 1000;
     private final LatLng mDefaultLocation = new LatLng(45.116177, 7.74261);
 
     private GoogleMap mMap;
@@ -193,7 +204,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
             public void onClick(View v) {
 
                 RouteDetailsFragment routeDetailsFragment = new RouteDetailsFragment();
-                routeDetailsFragment.show(getSupportFragmentManager(),"RouteDetailsFragment");
+                routeDetailsFragment.show(getSupportFragmentManager(), "RouteDetailsFragment");
             }
         });
 
@@ -210,7 +221,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         com.zano.shareride.network.common.Location pickup = new com.zano.shareride.network.common.Location();
         pickup.setLon(BigDecimal.valueOf(markerStart.getPosition().longitude).setScale(Constants.Scale.LATLONG, BigDecimal.ROUND_HALF_UP).doubleValue());
         pickup.setLat(BigDecimal.valueOf(markerStart.getPosition().latitude).setScale(Constants.Scale.LATLONG, BigDecimal.ROUND_HALF_UP).doubleValue());
-        if(markerStart.getTag()!=null){
+        if (markerStart.getTag() != null) {
             Place place = (Place) markerStart.getTag();
             pickup.setAddress(place.getAddress().toString());
             pickup.setLocationName(place.getName().toString());
@@ -220,14 +231,14 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         com.zano.shareride.network.common.Location delivery = new com.zano.shareride.network.common.Location();
         delivery.setLon(BigDecimal.valueOf(markerFinish.getPosition().longitude).setScale(Constants.Scale.LATLONG, BigDecimal.ROUND_HALF_UP).doubleValue());
         delivery.setLat(BigDecimal.valueOf(markerFinish.getPosition().latitude).setScale(Constants.Scale.LATLONG, BigDecimal.ROUND_HALF_UP).doubleValue());
-        if(markerFinish.getTag()!=null){
+        if (markerFinish.getTag() != null) {
             Place place = (Place) markerFinish.getTag();
             delivery.setAddress(place.getAddress().toString());
             delivery.setLocationName(place.getName().toString());
         }
         checkPathRequest.setDelivery(delivery);
 
-        if(deliveryTime) {
+        if (deliveryTime) {
             delivery.setTime(new Date().getTime()); //TODO
         } else {
             pickup.setTime(new Date().getTime()); //TODO
@@ -247,7 +258,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         } else {
             checkButton.setEnabled(false);
         }
-        if(routeChecked) {
+        if (routeChecked) {
             confirmButton.setEnabled(true);
         }
     }
@@ -264,7 +275,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         if (markerOptions != null) {
             Marker marker = mMap.addMarker(markerOptions.position(newLatLon));
             marker.showInfoWindow();
-            if(place != null) {
+            if (place != null) {
                 marker.setTag(place);
             }
 
@@ -319,8 +330,28 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
                     new LatLng(mLastKnownLocation.getLatitude(),
                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
         } else {
-            Log.d(TAG, "Current location is null. Using defaults.");
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+            Log.d(TAG, "Last know location is null. Trying to get an update.");
+            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            boolean gpsEnabled;
+            try {
+                gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            } catch(Exception ex) {
+                Log.d(TAG, "Error in checking availability of GPS");
+                gpsEnabled = false;
+            }
+
+            if(gpsEnabled && mLocationPermissionGranted) {
+                Log.d(TAG, "GPS is enabled");
+                LocationRequest mLocationRequest = LocationRequest.create()
+                        .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                        .setInterval(INTERVAL_UPDATE * SECOND_IN_MILLISECONDS)
+                        .setFastestInterval(FASTEST_INTERVAL_UPDATE * SECOND_IN_MILLISECONDS);
+                showProgressDialog("Locating...");
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            } else {
+                Log.d(TAG, "GPS is not enabled and we have no clue about our whereabouts. Using a default");
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+            }
         }
     }
 
@@ -343,9 +374,39 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "Play services connection failed: ConnectionResult.getErrorCode() = "
-                + connectionResult.getErrorCode());
         closeProgressDialog();
+
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(this, Constants.RequestCodes.ACTIVITIES_RESOLVE_ERROR);
+                //Thrown if Google Play services canceled the original PendingIntent
+            } catch (IntentSender.SendIntentException e) {
+                // Log the error
+                Log.e(TAG, "Play services connection failed: ConnectionResult.getErrorCode() = "
+                        + connectionResult.getErrorCode(), e);
+            }
+        } else {
+            /*
+             * If no resolution is available, display a dialog to the
+             * user with the error.
+             */
+            Log.d(TAG, "Play services connection failed: ConnectionResult.getErrorCode() = "
+                    + connectionResult.getErrorCode());
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.RequestCodes.ACTIVITIES_RESOLVE_ERROR) {
+            if (resultCode == RESULT_OK) {
+                // Make sure the app is not already connected or attempting to connect
+                if (!mGoogleApiClient.isConnecting() &&
+                        !mGoogleApiClient.isConnected()) {
+                    mGoogleApiClient.connect();
+                }
+            }
+        }
     }
 
     @Override
@@ -366,21 +427,21 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
     @Override
     public void onDialogPositiveClick(int numberOfSeats, int year, int month, int dayOfMonth, int hourOfDay, int minute) {
         Log.d(TAG, "onDialogPositiveClick");
-        CheckPathRequest checkPathRequest = createCheckPathRequest(false,numberOfSeats, year,month ,dayOfMonth,hourOfDay , minute);
+        CheckPathRequest checkPathRequest = createCheckPathRequest(false, numberOfSeats, year, month, dayOfMonth, hourOfDay, minute);
         showProgressDialog("Checking...");
         NetworkController.getInstance(MapActivity.this).addCheckPathRequest(checkPathRequest, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 closeProgressDialog();
                 //TODO check response
-                showToast("Path available!",false);
+                showToast("Path available!", false);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 closeProgressDialog();
-                Log.e(TAG, "onErrorResponse:" + error.getMessage(),error);
-                showToast("An error occured!",false);
+                Log.e(TAG, "onErrorResponse:" + error.getMessage(), error);
+                showToast("An error occured!", false);
             }
         });
     }
@@ -388,5 +449,18 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
     @Override
     public void onDialogNegativeClick() {
         Log.d(TAG, "onDialogPositiveClick");
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if(mLastKnownLocation == null) {
+            mLastKnownLocation = location;
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(mLastKnownLocation.getLatitude(),
+                            mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+            //After one single update, I disconnect the listener
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            closeProgressDialog();
+        }
     }
 }

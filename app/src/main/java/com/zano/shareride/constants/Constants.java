@@ -22,6 +22,7 @@ public class Constants {
     public @interface RequestCodes {
         int NO_PERMISSION_REQUEST = 0;
         int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+        int ACTIVITIES_RESOLVE_ERROR = 1001;
     }
 
     @IntDef({
