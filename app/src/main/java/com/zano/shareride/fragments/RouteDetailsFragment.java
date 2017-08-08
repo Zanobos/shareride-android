@@ -9,7 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.NumberPicker;
+import android.widget.EditText;
 
 import com.zano.shareride.R;
 
@@ -24,9 +24,7 @@ import butterknife.ButterKnife;
 
 public class RouteDetailsFragment extends DialogFragment {
 
-    private static final int MAX_SEATS = 15;
-
-    @BindView(R.id.fragment_route_details_numberpicker) NumberPicker numberPicker;
+    @BindView(R.id.fragment_route_details_numberpicker) EditText seatsPicker;
     @BindView(R.id.fragment_route_details_datepicker) Button datePicker;
     @BindView(R.id.fragment_route_details_timepicker) Button timePicker;
 
@@ -67,7 +65,7 @@ public class RouteDetailsFragment extends DialogFragment {
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        View view = inflater.inflate(R.layout.fragment_route_details, null);
+        View view = inflater.inflate(R.layout.fragment_route_details_relative, null);
         ButterKnife.bind(this, view);
         builder.setView(view);
 
@@ -120,14 +118,13 @@ public class RouteDetailsFragment extends DialogFragment {
             }
         });
 
-        numberPicker.setMinValue(0);
-        numberPicker.setMaxValue(MAX_SEATS);
-        numberPicker.setValue(numberOfSeats);
-        numberPicker.setWrapSelectorWheel(true);
-        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+        seatsPicker.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                numberOfSeats = newVal;
+            public void onFocusChange(View v, boolean hasFocus) {
+                String seats = seatsPicker.getText().toString();
+                if(!seats.isEmpty()) {
+                    numberOfSeats = Integer.parseInt(seats);
+                }
             }
         });
 

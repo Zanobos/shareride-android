@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
 
@@ -10,9 +9,13 @@
         android:id="@+id/fragment_route_details_tv_number_of_seats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/fragment_route_details_number_of_seats"/>
+        android:text="@string/fragment_route_details_number_of_seats"
+        android:layout_alignTop="@id/fragment_route_details_numberpicker"
+        android:layout_alignBottom="@id/fragment_route_details_numberpicker"
+        android:gravity="center_vertical"
+        />
 
-    <NumberPicker
+    <EditText
         android:id="@+id/fragment_route_details_numberpicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,6 +23,7 @@
         android:layout_alignParentRight="true"
         android:layout_toEndOf="@id/fragment_route_details_tv_number_of_seats"
         android:layout_toRightOf="@id/fragment_route_details_tv_number_of_seats"
+        android:inputType="number"
         />
 
     <TextView
@@ -27,7 +31,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/fragment_route_details_tv_number_of_seats"
-        android:text="@string/fragment_route_details_date"/>
+        android:layout_alignTop="@id/fragment_route_details_datepicker"
+        android:layout_alignBottom="@id/fragment_route_details_datepicker"
+        android:gravity="center_vertical"
+        android:text="@string/fragment_route_details_date"
+        />
 
     <Button
         android:id="@+id/fragment_route_details_datepicker"
@@ -35,6 +43,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignLeft="@id/fragment_route_details_numberpicker"
+        android:layout_alignStart="@id/fragment_route_details_numberpicker"
         android:layout_toEndOf="@id/fragment_route_details_tv_datepicker"
         android:layout_toRightOf="@id/fragment_route_details_tv_datepicker"
         android:layout_below="@id/fragment_route_details_numberpicker"
@@ -46,7 +56,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/fragment_route_details_tv_datepicker"
-        android:text="@string/fragment_route_details_number_of_seats"/>
+        android:layout_alignTop="@id/fragment_route_details_timepicker"
+        android:layout_alignBottom="@id/fragment_route_details_timepicker"
+        android:gravity="center_vertical"
+        android:text="@string/fragment_route_details_time"/>
 
     <Button
         android:id="@+id/fragment_route_details_timepicker"
@@ -54,6 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_alignLeft="@id/fragment_route_details_numberpicker"
+        android:layout_alignStart="@id/fragment_route_details_numberpicker"
         android:layout_toEndOf="@id/fragment_route_details_tv_timepicker"
         android:layout_toRightOf="@id/fragment_route_details_tv_timepicker"
         android:layout_below="@id/fragment_route_details_datepicker"

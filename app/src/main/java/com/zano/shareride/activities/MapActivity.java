@@ -130,6 +130,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
 
         updateLocationUI();

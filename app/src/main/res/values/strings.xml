@@ -7,6 +7,10 @@
     <string name="check_button_text">Check availability</string>
     <string name="check">Check route</string>
     <string name="cancel">Cancel</string>
-    <string name="fragment_route_details_number_of_seats">Pick the number of seats</string>
+    <string name="fragment_route_details_number_of_seats">Choose the number of seats</string>
     <string name="fragment_route_details_date">Choose the date</string>
+    <string name="fragment_route_details_time">Choose the time</string>
+    <string name="fragment_route_details_number_of_seats_feedback">Chosen number:</string>
+    <string name="fragment_route_details_date_feedback">Chosen date:</string>
+    <string name="fragment_route_details_time_feedback">Chosen time</string>
 </resources>

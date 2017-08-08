@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+    <TextView
+        android:id="@+id/fragment_route_details_tv_number_of_seats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fragment_route_details_number_of_seats"
+        />
+
+    <TextView
+        android:id="@+id/fragment_route_details_tv_number_of_seats_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_route_details_tv_number_of_seats"
+        android:text="@string/fragment_route_details_number_of_seats_feedback"
+        android:layout_marginBottom="16dp"
+        />
+
+    <EditText
+        android:id="@+id/fragment_route_details_numberpicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_toEndOf="@id/fragment_route_details_tv_number_of_seats"
+        android:layout_toRightOf="@id/fragment_route_details_tv_number_of_seats"
+        />
+
+    <TextView
+        android:id="@+id/fragment_route_details_tv_datepicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_route_details_tv_number_of_seats_feedback"
+        android:text="@string/fragment_route_details_date"
+        />
+
+    <TextView
+        android:id="@+id/fragment_route_details_tv_datepicker_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_route_details_tv_datepicker"
+        android:text="@string/fragment_route_details_date_feedback"
+        android:layout_marginBottom="16dp"
+        />
+
+    <Button
+        android:id="@+id/fragment_route_details_datepicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignLeft="@id/fragment_route_details_numberpicker"
+        android:layout_alignStart="@id/fragment_route_details_numberpicker"
+        android:layout_below="@id/fragment_route_details_numberpicker"
+        android:layout_toEndOf="@id/fragment_route_details_tv_datepicker"
+        android:layout_toRightOf="@id/fragment_route_details_tv_datepicker"
+        android:text="DatePicker"
+        />
+
+    <TextView
+        android:id="@+id/fragment_route_details_tv_timepicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_route_details_tv_datepicker_feedback"
+        android:text="@string/fragment_route_details_time"
+        />
+
+    <TextView
+        android:id="@+id/fragment_route_details_tv_timepicker_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_route_details_tv_timepicker"
+        android:text="@string/fragment_route_details_time_feedback"
+        android:layout_marginBottom="16dp"
+        />
+
+    <Button
+        android:id="@+id/fragment_route_details_timepicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignLeft="@id/fragment_route_details_numberpicker"
+        android:layout_alignStart="@id/fragment_route_details_numberpicker"
+        android:layout_below="@id/fragment_route_details_datepicker"
+        android:layout_toEndOf="@id/fragment_route_details_tv_timepicker"
+        android:layout_toRightOf="@id/fragment_route_details_tv_timepicker"
+        android:text="TimePicker"
+        />
+
+
+</RelativeLayout>

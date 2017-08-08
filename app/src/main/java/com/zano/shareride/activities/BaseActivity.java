@@ -57,8 +57,9 @@ public abstract class BaseActivity extends AppCompatActivity {
      * Infinite waiting dialog close
      */
     protected void closeProgressDialog() {
-        if(progressDialog != null) {
+        if(progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
+            progressDialog = null;
         } else {
             Log.d(TAG, "onCloseProgressDialog:dialog not active");
         }
