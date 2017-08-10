@@ -43,10 +43,11 @@ import com.zano.shareride.network.checkpath.CheckPathRequest;
 import com.zano.shareride.network.common.AdditionalInfo;
 import com.zano.shareride.network.common.UserInfo;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import butterknife.BindView;
 
@@ -210,7 +211,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
 
     }
 
-    private CheckPathRequest createCheckPathRequest(boolean deliveryTime, int numberOfSeats, int year, int month, int dayOfMoth, int hour, int minute) {
+    private CheckPathRequest createCheckPathRequest(boolean deliveryTime, int numberOfSeats, LocalDate date, LocalTime time) {
         CheckPathRequest checkPathRequest = new CheckPathRequest();
 
         AdditionalInfo additionalInfo = new AdditionalInfo();
@@ -239,9 +240,11 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         checkPathRequest.setDelivery(delivery);
 
         if (deliveryTime) {
-            delivery.setTime(new Date().getTime()); //TODO
+            delivery.setDate(date);
+            delivery.setTime(time);
         } else {
-            pickup.setTime(new Date().getTime()); //TODO
+            pickup.setDate(date);
+            pickup.setTime(time);
         }
 
         UserInfo userInfo = new UserInfo();
@@ -425,9 +428,9 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onDialogPositiveClick(boolean deliveryTime, int numberOfSeats, int year, int month, int dayOfMonth, int hourOfDay, int minute) {
+    public void onDialogPositiveClick(boolean deliveryTime, int numberOfSeats, LocalDate date, LocalTime time) {
         Log.d(TAG, "onDialogPositiveClick");
-        CheckPathRequest checkPathRequest = createCheckPathRequest(deliveryTime, numberOfSeats, year, month, dayOfMonth, hourOfDay, minute);
+        CheckPathRequest checkPathRequest = createCheckPathRequest(deliveryTime, numberOfSeats, date, time);
         showProgressDialog("Checking...");
         NetworkController.getInstance(MapActivity.this).addCheckPathRequest(checkPathRequest, new Response.Listener<JSONObject>() {
             @Override

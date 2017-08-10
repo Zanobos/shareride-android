@@ -1,5 +1,8 @@
 package com.zano.shareride.network.common;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+
 /**
  * Created by Zano on 16/07/2017, 12:01.
  */
@@ -10,7 +13,8 @@ public class Location {
     private String address;
     private Double lat;
     private Double lon;
-    private Long time;
+    private LocalDate date;
+    private LocalTime time;
 
     public String getLocationName() {
         return locationName;
@@ -44,11 +48,19 @@ public class Location {
         this.lon = lon;
     }
 
-    public Long getTime() {
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public LocalTime getTime() {
         return time;
     }
 
-    public void setTime(Long time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
 }

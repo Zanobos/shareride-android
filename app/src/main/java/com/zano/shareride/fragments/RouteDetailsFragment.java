@@ -12,8 +12,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zano.shareride.R;
+
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 import java.util.Calendar;
 
@@ -34,12 +38,10 @@ public class RouteDetailsFragment extends DialogFragment {
     @BindView(R.id.fragment_route_details_tv_deliverytime) TextView deliveryTimeTextView;
 
     private RouteDetailsFragmentListener mListener;
+    private Context mContext;
 
-    private Integer hourOfDay;
-    private Integer minute;
-    private Integer year;
-    private Integer month;
-    private Integer dayOfMonth;
+    private LocalDate date;
+    private LocalTime time;
     private Integer numberOfSeats;
     private boolean deliveryTime;
 
@@ -51,6 +53,7 @@ public class RouteDetailsFragment extends DialogFragment {
         try {
             // Instantiate the RouteDetailsFragmentListener so we can send events to the host
             mListener = (RouteDetailsFragmentListener) context;
+            mContext = context;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             throw new ClassCastException(context.toString()
@@ -76,18 +79,19 @@ public class RouteDetailsFragment extends DialogFragment {
         builder.setView(view);
 
         final Calendar now = Calendar.getInstance();
-        year = now.get(Calendar.YEAR);
-        month = now.get(Calendar.MONTH);
-        dayOfMonth = now.get(Calendar.DAY_OF_MONTH);
-        hourOfDay = now.get(Calendar.HOUR_OF_DAY);
-        minute = now.get(Calendar.MINUTE);
+        date = new LocalDate();
+        time = new LocalTime();
         numberOfSeats = 1;
         deliveryTime = true;
 
         builder.setPositiveButton(R.string.check, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                mListener.onDialogPositiveClick(deliveryTime,numberOfSeats,year,month,dayOfMonth,hourOfDay,minute);
+                if (validate()) {
+                    mListener.onDialogPositiveClick(deliveryTime, numberOfSeats, date, time);
+                } else {
+                    Toast.makeText(mContext, R.string.input_not_valid, Toast.LENGTH_SHORT).show(); //TODO
+                }
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -102,8 +106,7 @@ public class RouteDetailsFragment extends DialogFragment {
                 TimePickerFragment timePickerFragment = TimePickerFragment.newInstance(new TimePickerFragment.TimePickerListener() {
                     @Override
                     public void timePicked(int hourOfDay, int minute) {
-                        RouteDetailsFragment.this.hourOfDay = hourOfDay;
-                        RouteDetailsFragment.this.minute = minute;
+                        time = new LocalTime(hourOfDay, minute);
                     }
                 }, now);
                 timePickerFragment.show(getActivity().getSupportFragmentManager(), "TimePickerFragment");
@@ -116,9 +119,7 @@ public class RouteDetailsFragment extends DialogFragment {
                 DatePickerFragment timePickerFragment = DatePickerFragment.newInstance(new DatePickerFragment.DatePickerListener() {
                     @Override
                     public void datePicked(int year, int month, int dayOfMonth) {
-                        RouteDetailsFragment.this.year = year;
-                        RouteDetailsFragment.this.month = month;
-                        RouteDetailsFragment.this.dayOfMonth = dayOfMonth;
+                        date = new LocalDate(year, month + 1, dayOfMonth); //Month is still 0-indexed
                     }
                 }, now);
                 timePickerFragment.show(getActivity().getSupportFragmentManager(), "DatePickerFragment");
@@ -129,7 +130,7 @@ public class RouteDetailsFragment extends DialogFragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 String seats = seatsPicker.getText().toString();
-                if(!seats.isEmpty()) {
+                if (!seats.isEmpty()) {
                     numberOfSeats = Integer.parseInt(seats);
                 }
             }
@@ -139,8 +140,8 @@ public class RouteDetailsFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 deliveryTime = deliveryTimeCheckBox.isChecked();
-                if(!deliveryTime) {
-                    deliveryTimeTextView.setText(R.string.fragment_route_details_arrivaltime);
+                if (!deliveryTime) {
+                    deliveryTimeTextView.setText(R.string.fragment_route_details_pickuptime);
                 } else {
                     deliveryTimeTextView.setText(R.string.fragment_route_details_deliverytime);
                 }
@@ -150,8 +151,16 @@ public class RouteDetailsFragment extends DialogFragment {
         return builder.create();
     }
 
+    //TODO
+    private boolean validate() {
+        boolean valid = true;
+
+        return valid;
+    }
+
     public interface RouteDetailsFragmentListener {
-        void onDialogPositiveClick(boolean deliveryTime,int numberOfSeats, int year, int month, int dayOfMonth, int hourOfDay, int minute);
+        void onDialogPositiveClick(boolean deliveryTime, int numberOfSeats, LocalDate date, LocalTime time);
+
         void onDialogNegativeClick();
     }
 

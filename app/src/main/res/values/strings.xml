@@ -15,4 +15,6 @@
     <string name="fragment_route_details_time_feedback">Chosen time</string>
     <string name="fragment_route_details_deliverytime">Delivery time</string>
     <string name="fragment_route_details_arrivaltime">Arrival time</string>
+    <string name="fragment_route_details_pickuptime">Pickup time</string>
+    <string name="input_not_valid">Validate input</string>
 </resources>
