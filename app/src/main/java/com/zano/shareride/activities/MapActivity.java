@@ -425,9 +425,9 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onDialogPositiveClick(int numberOfSeats, int year, int month, int dayOfMonth, int hourOfDay, int minute) {
+    public void onDialogPositiveClick(boolean deliveryTime, int numberOfSeats, int year, int month, int dayOfMonth, int hourOfDay, int minute) {
         Log.d(TAG, "onDialogPositiveClick");
-        CheckPathRequest checkPathRequest = createCheckPathRequest(false, numberOfSeats, year, month, dayOfMonth, hourOfDay, minute);
+        CheckPathRequest checkPathRequest = createCheckPathRequest(deliveryTime, numberOfSeats, year, month, dayOfMonth, hourOfDay, minute);
         showProgressDialog("Checking...");
         NetworkController.getInstance(MapActivity.this).addCheckPathRequest(checkPathRequest, new Response.Listener<JSONObject>() {
             @Override

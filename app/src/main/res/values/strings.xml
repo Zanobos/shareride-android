@@ -13,4 +13,6 @@
     <string name="fragment_route_details_number_of_seats_feedback">Chosen number:</string>
     <string name="fragment_route_details_date_feedback">Chosen date:</string>
     <string name="fragment_route_details_time_feedback">Chosen time</string>
+    <string name="fragment_route_details_deliverytime">Delivery time</string>
+    <string name="fragment_route_details_arrivaltime">Arrival time</string>
 </resources>

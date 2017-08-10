@@ -59,7 +59,8 @@
         android:layout_alignTop="@id/fragment_route_details_timepicker"
         android:layout_alignBottom="@id/fragment_route_details_timepicker"
         android:gravity="center_vertical"
-        android:text="@string/fragment_route_details_time"/>
+        android:text="@string/fragment_route_details_time"
+        />
 
     <Button
         android:id="@+id/fragment_route_details_timepicker"
@@ -74,5 +75,31 @@
         android:layout_below="@id/fragment_route_details_datepicker"
         android:text="TimePicker"
         />
+
+    <TextView
+        android:id="@+id/fragment_route_details_tv_deliverytime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_route_details_tv_timepicker"
+        android:layout_alignTop="@+id/fragment_route_details_cb_deliverytime"
+        android:layout_alignBottom="@+id/fragment_route_details_cb_deliverytime"
+        android:gravity="center_vertical"
+        android:text="@string/fragment_route_details_deliverytime"
+        />
+
+    <CheckBox
+        android:id="@+id/fragment_route_details_cb_deliverytime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignLeft="@id/fragment_route_details_timepicker"
+        android:layout_alignStart="@id/fragment_route_details_timepicker"
+        android:layout_toEndOf="@id/fragment_route_details_tv_timepicker"
+        android:layout_toRightOf="@id/fragment_route_details_tv_deliverytime"
+        android:layout_below="@id/fragment_route_details_timepicker"
+        android:checked="true"
+        />
+
 
 </RelativeLayout>

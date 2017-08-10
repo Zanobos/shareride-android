@@ -9,7 +9,9 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.zano.shareride.R;
 
@@ -27,6 +29,9 @@ public class RouteDetailsFragment extends DialogFragment {
     @BindView(R.id.fragment_route_details_numberpicker) EditText seatsPicker;
     @BindView(R.id.fragment_route_details_datepicker) Button datePicker;
     @BindView(R.id.fragment_route_details_timepicker) Button timePicker;
+    @BindView(R.id.fragment_route_details_cb_deliverytime) CheckBox deliveryTimeCheckBox;
+
+    @BindView(R.id.fragment_route_details_tv_deliverytime) TextView deliveryTimeTextView;
 
     private RouteDetailsFragmentListener mListener;
 
@@ -36,6 +41,7 @@ public class RouteDetailsFragment extends DialogFragment {
     private Integer month;
     private Integer dayOfMonth;
     private Integer numberOfSeats;
+    private boolean deliveryTime;
 
     // Override the Fragment.onAttach() method to instantiate the RouteDetailsFragmentListener
     @Override
@@ -76,11 +82,12 @@ public class RouteDetailsFragment extends DialogFragment {
         hourOfDay = now.get(Calendar.HOUR_OF_DAY);
         minute = now.get(Calendar.MINUTE);
         numberOfSeats = 1;
+        deliveryTime = true;
 
         builder.setPositiveButton(R.string.check, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
-                mListener.onDialogPositiveClick(numberOfSeats,year,month,dayOfMonth,hourOfDay,minute);
+                mListener.onDialogPositiveClick(deliveryTime,numberOfSeats,year,month,dayOfMonth,hourOfDay,minute);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -128,11 +135,23 @@ public class RouteDetailsFragment extends DialogFragment {
             }
         });
 
+        deliveryTimeCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deliveryTime = deliveryTimeCheckBox.isChecked();
+                if(!deliveryTime) {
+                    deliveryTimeTextView.setText(R.string.fragment_route_details_arrivaltime);
+                } else {
+                    deliveryTimeTextView.setText(R.string.fragment_route_details_deliverytime);
+                }
+            }
+        });
+
         return builder.create();
     }
 
     public interface RouteDetailsFragmentListener {
-        void onDialogPositiveClick(int numberOfSeats, int year, int month, int dayOfMonth, int hourOfDay, int minute);
+        void onDialogPositiveClick(boolean deliveryTime,int numberOfSeats, int year, int month, int dayOfMonth, int hourOfDay, int minute);
         void onDialogNegativeClick();
     }
 

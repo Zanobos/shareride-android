@@ -9,7 +9,10 @@ import android.support.annotation.StringDef;
 
 public class Constants {
 
-    @StringDef({ParcelArgs.NAMECLASS})
+    @StringDef({
+            ParcelArgs.NAMECLASS,
+            ParcelArgs.LOCATION,
+            ParcelArgs.CAMERA_POSITION})
     public @interface ParcelArgs {
         String NAMECLASS = "NAMECLASS";
         String LOCATION = "LOCATION";
@@ -18,7 +21,8 @@ public class Constants {
 
     @IntDef({
             RequestCodes.NO_PERMISSION_REQUEST,
-            RequestCodes.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION})
+            RequestCodes.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION,
+            RequestCodes.ACTIVITIES_RESOLVE_ERROR})
     public @interface RequestCodes {
         int NO_PERMISSION_REQUEST = 0;
         int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
