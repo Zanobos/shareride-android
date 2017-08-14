@@ -3,6 +3,7 @@ package com.zano.shareride.activities;
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +25,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected static String TAG;
 
-    @BindView(R.id.my_toolbar) protected Toolbar toolbar;
+    @Nullable
+    @BindView(R.id.my_toolbar)
+    protected Toolbar toolbar;
 
     protected ProgressDialog progressDialog;
 
@@ -40,10 +43,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * Infinite waiting dialog
+     *
      * @param message
      */
     protected void showProgressDialog(String message) {
-        if(progressDialog == null) {
+        if (progressDialog == null) {
             progressDialog = new ProgressDialog(BaseActivity.this);
             progressDialog.setIndeterminate(true);
             progressDialog.setMessage(message);
@@ -53,11 +57,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    protected void showProgressDialog(int resourceId) {
+        String message = getString(resourceId);
+        showProgressDialog(message);
+    }
+
+
     /**
      * Infinite waiting dialog close
      */
     protected void closeProgressDialog() {
-        if(progressDialog != null && progressDialog.isShowing()) {
+        if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
             progressDialog = null;
         } else {
@@ -67,25 +77,27 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * Show toast
+     *
      * @param message
      * @param lengthLong
      */
     public void showToast(String message, boolean lengthLong) {
         int length = lengthLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
         Log.d(TAG, "showToast: message <" + message + ">");
-        Toast.makeText(this, message,length).show();
+        Toast.makeText(this, message, length).show();
     }
 
     public void showToast(int resId, boolean lengthLong) {
         int length = lengthLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
         Log.d(TAG, "showToast: using resource: " + resId);
-        Toast.makeText(this, resId,length).show();
+        Toast.makeText(this, resId, length).show();
     }
 
     /**
      * If this method is used and request code is != from Constants.RequestCodes.NO_PERMISSION_REQUEST
      * then onRequestPermissionsResult() must be implemented to have a result
-     * @param permission the permission that needs to be checked or retrieved
+     *
+     * @param permission  the permission that needs to be checked or retrieved
      * @param requestCode the request code that will be used in the callback
      * @return true if the permission has been already given
      */
@@ -96,7 +108,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 == PackageManager.PERMISSION_GRANTED) {
             result = true;
             Log.d(TAG, "checkPermissions. Permission granted");
-        } else if(requestCode != Constants.RequestCodes.NO_PERMISSION_REQUEST) {
+        } else if (requestCode != Constants.RequestCodes.NO_PERMISSION_REQUEST) {
             Log.d(TAG, "checkPermissions. Permission not granted, asking the user");
             ActivityCompat.requestPermissions(
                     this,
@@ -106,6 +118,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         return result;
     }
+
     /**
      * @return the id referencing the layout to use for this activity
      */

@@ -23,7 +23,7 @@ public class NetworkController {
 
     protected static String TAG = "NetworkController";
 
-    public static final String ADDRESS = "http://192.168.1.104";
+    public static final String ADDRESS = "http://94.177.214.113";
     public static final String PORT = ":8080";
     public static final String BASE_URL = "/ShareRideServer/rest";
     public static final String CHECK_PATH_URL = "/bookingService/checkPath";

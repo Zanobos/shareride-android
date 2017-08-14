@@ -12,9 +12,24 @@
     <string name="fragment_route_details_time">Choose the time</string>
     <string name="fragment_route_details_number_of_seats_feedback">Chosen number:</string>
     <string name="fragment_route_details_date_feedback">Chosen date:</string>
-    <string name="fragment_route_details_time_feedback">Chosen time</string>
+    <string name="fragment_route_details_time_feedback">Chosen time:</string>
     <string name="fragment_route_details_deliverytime">Delivery time</string>
     <string name="fragment_route_details_arrivaltime">Arrival time</string>
     <string name="fragment_route_details_pickuptime">Pickup time</string>
     <string name="input_not_valid">Validate input</string>
+    <string name="activity_login_btn_login">login</string>
+    <string name="activity_login_tv_signup">No account yet? Create one</string>
+    <string name="input_password">Password</string>
+    <string name="input_email">Email</string>
+    <string name="toast_complete_form">Complete the form</string>
+    <string name="dialog_logging_in">Logging in…</string>
+    <string name="activity_login_auth_failed">Login failed, try again later</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_signup">Signup</string>
+    <string name="activity_signup_tv_login">Already a member? Login</string>
+    <string name="activity_signup_btn_signup">Create Account</string>
+    <string name="input_name">Name</string>
+    <string name="dialog_authenticating">Authenticating</string>
+    <string name="activity_signup_registration_failed">Registration failed, try again later</string>
+    <string name="toast_login_ok">Login successfull</string>
 </resources>

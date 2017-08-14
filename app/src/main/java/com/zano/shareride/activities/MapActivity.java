@@ -35,6 +35,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.zano.shareride.R;
 import com.zano.shareride.constants.Constants;
 import com.zano.shareride.fragments.RouteDetailsFragment;
@@ -211,7 +213,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
 
     }
 
-    private CheckPathRequest createCheckPathRequest(boolean deliveryTime, int numberOfSeats, LocalDate date, LocalTime time) {
+    private CheckPathRequest createCheckPathRequest(boolean deliveryTime, int numberOfSeats, LocalDate date, LocalTime time, String name, String userId) {
         CheckPathRequest checkPathRequest = new CheckPathRequest();
 
         AdditionalInfo additionalInfo = new AdditionalInfo();
@@ -248,8 +250,8 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         }
 
         UserInfo userInfo = new UserInfo();
-        userInfo.setName("Andrea Zanotti"); //TODO
-        userInfo.setUserId("ZANO"); //TODO
+        userInfo.setName(name);
+        userInfo.setUserId(userId);
         checkPathRequest.setUserInfo(userInfo);
 
         return checkPathRequest;
@@ -410,6 +412,11 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
                 }
             }
         }
+        else if (requestCode == Constants.RequestCodes.ACTIVITIES_LOGIN) {
+            if (resultCode == RESULT_OK) {
+                showToast(R.string.toast_login_ok, false);
+            }
+        }
     }
 
     @Override
@@ -430,7 +437,21 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
     @Override
     public void onDialogPositiveClick(boolean deliveryTime, int numberOfSeats, LocalDate date, LocalTime time) {
         Log.d(TAG, "onDialogPositiveClick");
-        CheckPathRequest checkPathRequest = createCheckPathRequest(deliveryTime, numberOfSeats, date, time);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String name;
+        String userId;
+        if(user != null) {
+            name = user.getDisplayName();
+            userId = user.getUid();
+        } else {
+            Log.d(TAG, "onDialogPositiveClick:not auth");
+            Intent intent = new Intent(MapActivity.this, LoginActivity.class);
+            startActivityForResult(intent, Constants.RequestCodes.ACTIVITIES_LOGIN);
+            return;
+        }
+
+        CheckPathRequest checkPathRequest = createCheckPathRequest(deliveryTime, numberOfSeats, date, time, name, userId);
         showProgressDialog("Checking...");
         NetworkController.getInstance(MapActivity.this).addCheckPathRequest(checkPathRequest, new Response.Listener<JSONObject>() {
             @Override

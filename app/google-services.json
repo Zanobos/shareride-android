@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "714804463498-572isf4ktpsk9cestf6satf3ctaqu2ks.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zano.shareride",
+            "certificate_hash": "bf6e5734697e58a6d59228aa32f60ebd4ad1a803"
+          }
+        },
+        {
           "client_id": "714804463498-kklkj5scid852os20leecc88od551d2p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

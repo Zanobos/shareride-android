@@ -22,11 +22,15 @@ public class Constants {
     @IntDef({
             RequestCodes.NO_PERMISSION_REQUEST,
             RequestCodes.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION,
-            RequestCodes.ACTIVITIES_RESOLVE_ERROR})
+            RequestCodes.ACTIVITIES_RESOLVE_ERROR,
+            RequestCodes.ACTIVITIES_SIGNUP,
+            RequestCodes.ACTIVITIES_LOGIN})
     public @interface RequestCodes {
         int NO_PERMISSION_REQUEST = 0;
         int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
         int ACTIVITIES_RESOLVE_ERROR = 1001;
+        int ACTIVITIES_SIGNUP = 1002;
+        int ACTIVITIES_LOGIN = 1003;
     }
 
     @IntDef({

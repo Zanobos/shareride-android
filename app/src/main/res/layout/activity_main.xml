@@ -24,6 +24,12 @@
             android:layout_height="wrap_content"
             android:text="@string/map" />
 
+        <Button
+            android:id="@+id/signout_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="signout" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/my_recycler_view"
             android:layout_width="match_parent"
