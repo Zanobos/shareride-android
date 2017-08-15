@@ -10,8 +10,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.zano.shareride.network.checkpath.CheckPathRequest;
+import com.zano.shareride.network.serialization.LocalDateTypeConverter;
+import com.zano.shareride.network.serialization.LocalTimeTypeConverter;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,7 +54,12 @@ public class NetworkController {
 
     public void addCheckPathRequest(CheckPathRequest checkPathRequest, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener){
 
-        String json = new Gson().toJson(checkPathRequest);
+        GsonBuilder builder = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateTypeConverter())
+                .registerTypeAdapter(LocalTime.class, new LocalTimeTypeConverter());
+        Gson gson = builder.create();
+
+        String json = gson.toJson(checkPathRequest);
         JSONObject jsonObj = null;
         try {
             jsonObj = new JSONObject(json);
