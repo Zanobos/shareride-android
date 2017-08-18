@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 
 public abstract class BaseFragment extends Fragment {
 
-    private static String TAG;
+    private String TAG;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
