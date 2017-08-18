@@ -38,12 +38,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.zano.shareride.R;
-import com.zano.shareride.constants.Constants;
 import com.zano.shareride.fragments.RouteDetailsFragment;
 import com.zano.shareride.network.NetworkController;
 import com.zano.shareride.network.checkpath.CheckPathRequest;
 import com.zano.shareride.network.common.AdditionalInfo;
 import com.zano.shareride.network.common.UserInfo;
+import com.zano.shareride.util.Constants;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -283,10 +283,10 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
             if (place != null) {
                 marker.setTag(place);
             }
-
+        
             if (markerStart == null) {
                 markerStart = marker;
-            } else if (markerFinish == null) {
+            } else /*if (markerFinish == null)*/ {
                 markerFinish = marker;
             }
             set = true;

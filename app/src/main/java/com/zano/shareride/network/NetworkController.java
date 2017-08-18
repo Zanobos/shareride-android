@@ -14,11 +14,14 @@ import com.google.gson.GsonBuilder;
 import com.zano.shareride.network.checkpath.CheckPathRequest;
 import com.zano.shareride.network.serialization.LocalDateTypeConverter;
 import com.zano.shareride.network.serialization.LocalTimeTypeConverter;
+import com.zano.shareride.util.PropertiesReader;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Properties;
 
 /**
  * Created by Zano on 16/07/2017, 11:11.
@@ -28,17 +31,16 @@ public class NetworkController {
 
     protected static String TAG = "NetworkController";
 
-    public static final String ADDRESS = "http://94.177.214.113";
-    public static final String PORT = ":8080";
-    public static final String BASE_URL = "/ShareRideServer/rest";
     public static final String CHECK_PATH_URL = "/bookingService/checkPath";
-
     private static NetworkController instance;
 
     private RequestQueue requestQueue;
+    private String serverBasePath;
 
     private NetworkController(Context context) {
         requestQueue  = Volley.newRequestQueue(context.getApplicationContext());
+        Properties properties = new PropertiesReader(context).getProperties();
+        serverBasePath = properties.getProperty("server.address") + properties.getProperty("server.base.path");
     }
 
     public static NetworkController getInstance(Context context) {
@@ -66,7 +68,7 @@ public class NetworkController {
         } catch (JSONException e) {
             Log.e(TAG, "error in marshalling:" + e.getMessage(),e);
         }
-        String url = ADDRESS + PORT + BASE_URL + CHECK_PATH_URL;
+        String url = serverBasePath + CHECK_PATH_URL;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObj, listener, errorListener != null ? errorListener : new DefaultErrorListener());
         Log.d(TAG,"Enqueuing a request to: " + url + ", REQUEST: " + jsonObj);
         addToRequestQueue(request);

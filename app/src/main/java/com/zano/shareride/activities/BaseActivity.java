@@ -12,7 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.zano.shareride.R;
-import com.zano.shareride.constants.Constants;
+import com.zano.shareride.util.Constants;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

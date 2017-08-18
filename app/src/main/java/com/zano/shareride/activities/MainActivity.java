@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.zano.shareride.R;
 import com.zano.shareride.adapters.BaseRecyclerAdapter;
 import com.zano.shareride.adapters.ExampleAdapter;
-import com.zano.shareride.constants.Constants;
+import com.zano.shareride.util.Constants;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

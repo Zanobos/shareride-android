@@ -1,4 +1,4 @@
-package com.zano.shareride.constants;
+package com.zano.shareride.util;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.StringDef;
