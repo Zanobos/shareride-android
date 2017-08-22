@@ -63,4 +63,16 @@ public class Location {
     public void setTime(LocalTime time) {
         this.time = time;
     }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "locationName='" + locationName + '\'' +
+                ", address='" + address + '\'' +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                ", date=" + date +
+                ", time=" + time +
+                '}';
+    }
 }

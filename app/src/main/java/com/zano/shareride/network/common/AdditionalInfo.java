@@ -25,4 +25,11 @@ public class AdditionalInfo {
         this.needAssistance = needAssistance;
     }
 
+    @Override
+    public String toString() {
+        return "AdditionalInfo{" +
+                "numberOfSeats=" + numberOfSeats +
+                ", needAssistance=" + needAssistance +
+                '}';
+    }
 }

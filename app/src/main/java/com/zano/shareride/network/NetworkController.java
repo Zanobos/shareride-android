@@ -7,19 +7,10 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.zano.shareride.network.checkpath.CheckPathRequest;
-import com.zano.shareride.network.serialization.LocalDateTypeConverter;
-import com.zano.shareride.network.serialization.LocalTimeTypeConverter;
+import com.zano.shareride.network.checkpath.CheckPathResponse;
 import com.zano.shareride.util.PropertiesReader;
-
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Properties;
 
@@ -54,23 +45,11 @@ public class NetworkController {
         requestQueue.add(request);
     }
 
-    public void addCheckPathRequest(CheckPathRequest checkPathRequest, Response.Listener<JSONObject> listener, Response.ErrorListener errorListener){
+    public void addCheckPathRequest(CheckPathRequest checkPathRequest, Response.Listener<CheckPathResponse> listener, Response.ErrorListener errorListener){
 
-        GsonBuilder builder = new GsonBuilder()
-                .registerTypeAdapter(LocalDate.class, new LocalDateTypeConverter())
-                .registerTypeAdapter(LocalTime.class, new LocalTimeTypeConverter());
-        Gson gson = builder.create();
-
-        String json = gson.toJson(checkPathRequest);
-        JSONObject jsonObj = null;
-        try {
-            jsonObj = new JSONObject(json);
-        } catch (JSONException e) {
-            Log.e(TAG, "error in marshalling:" + e.getMessage(),e);
-        }
         String url = serverBasePath + CHECK_PATH_URL;
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObj, listener, errorListener != null ? errorListener : new DefaultErrorListener());
-        Log.d(TAG,"Enqueuing a request to: " + url + ", REQUEST: " + jsonObj);
+        GsonRequest request = new GsonRequest(Request.Method.POST, url, checkPathRequest, listener, errorListener != null ? errorListener : new DefaultErrorListener(), CheckPathResponse.class);
+        Log.d(TAG,"Enqueuing a request to: " + url + ", REQUEST: " + checkPathRequest);
         addToRequestQueue(request);
     }
 

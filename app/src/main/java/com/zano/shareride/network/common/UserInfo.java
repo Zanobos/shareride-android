@@ -24,4 +24,12 @@ public class UserInfo {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "name='" + name + '\'' +
+                ", userId='" + userId + '\'' +
+                '}';
+    }
 }

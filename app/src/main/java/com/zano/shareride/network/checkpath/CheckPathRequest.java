@@ -1,6 +1,7 @@
 package com.zano.shareride.network.checkpath;
 
 import com.zano.shareride.network.common.AdditionalInfo;
+import com.zano.shareride.network.common.BaseRequest;
 import com.zano.shareride.network.common.Location;
 import com.zano.shareride.network.common.UserInfo;
 
@@ -8,7 +9,7 @@ import com.zano.shareride.network.common.UserInfo;
  * Created by Zano on 16/07/2017, 11:59.
  */
 
-public class CheckPathRequest {
+public class CheckPathRequest extends BaseRequest{
 
     private UserInfo userInfo;
     private Location pickup;
@@ -45,5 +46,15 @@ public class CheckPathRequest {
 
     public void setAdditionalInfo(AdditionalInfo additionalInfo) {
         this.additionalInfo = additionalInfo;
+    }
+
+    @Override
+    public String toString() {
+        return "CheckPathRequest{" +
+                "userInfo=" + userInfo +
+                ", pickup=" + pickup +
+                ", delivery=" + delivery +
+                ", additionalInfo=" + additionalInfo +
+                '}';
     }
 }

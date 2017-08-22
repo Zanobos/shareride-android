@@ -29,7 +29,10 @@
     <string name="activity_signup_tv_login">Already a member? Login</string>
     <string name="activity_signup_btn_signup">Create Account</string>
     <string name="input_name">Name</string>
-    <string name="dialog_authenticating">Authenticating</string>
+    <string name="dialog_authenticating">Authenticating…</string>
     <string name="activity_signup_registration_failed">Registration failed, try again later</string>
-    <string name="toast_login_ok">Login successfull</string>
+    <string name="toast_login_ok">Login successful</string>
+    <string name="dialog_path_available">Path available!</string>
+    <string name="dialog_checking">Checking…</string>
+    <string name="dialog_path_not_available">Path not available!</string>
 </resources>

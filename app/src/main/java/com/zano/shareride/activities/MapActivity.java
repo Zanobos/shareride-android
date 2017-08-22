@@ -41,13 +41,14 @@ import com.zano.shareride.R;
 import com.zano.shareride.fragments.RouteDetailsFragment;
 import com.zano.shareride.network.NetworkController;
 import com.zano.shareride.network.checkpath.CheckPathRequest;
+import com.zano.shareride.network.checkpath.CheckPathResponse;
 import com.zano.shareride.network.common.AdditionalInfo;
+import com.zano.shareride.network.common.EnumStatus;
 import com.zano.shareride.network.common.UserInfo;
 import com.zano.shareride.util.Constants;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
-import org.json.JSONObject;
 
 import java.math.BigDecimal;
 
@@ -341,7 +342,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
             try {
                 gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
             } catch(Exception ex) {
-                Log.d(TAG, "Error in checking availability of GPS");
+                Log.e(TAG, "Error in checking availability of GPS",ex);
                 gpsEnabled = false;
             }
 
@@ -367,12 +368,13 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         mLocationPermissionGranted = false;
         switch (requestCode) {
             case Constants.RequestCodes.PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
                 }
+                break;
             }
+            default:
+                break;
         }
 
     }
@@ -452,13 +454,22 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         }
 
         CheckPathRequest checkPathRequest = createCheckPathRequest(deliveryTime, numberOfSeats, date, time, name, userId);
-        showProgressDialog("Checking...");
-        NetworkController.getInstance(MapActivity.this).addCheckPathRequest(checkPathRequest, new Response.Listener<JSONObject>() {
+        showProgressDialog(R.string.dialog_checking);
+        NetworkController.getInstance(MapActivity.this).addCheckPathRequest(checkPathRequest, new Response.Listener<CheckPathResponse>() {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(CheckPathResponse response) {
                 closeProgressDialog();
-                //TODO check response
-                showToast("Path available!", false);
+                if(response.getStatus().equals(EnumStatus.ACCEPTED)){
+                    //TODO use the path came back response
+                    routeChecked = true;
+                    markerStart = null;
+                    markerFinish = null;
+                    showToast(getString(R.string.dialog_path_available), false);
+                } else {
+
+                    showToast(getString(R.string.dialog_path_not_available), false);
+                }
+                enableButtons();
             }
         }, new Response.ErrorListener() {
             @Override
