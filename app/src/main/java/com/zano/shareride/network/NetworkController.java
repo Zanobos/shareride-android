@@ -3,6 +3,7 @@ package com.zano.shareride.network;
 import android.content.Context;
 import android.util.Log;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,7 +23,10 @@ public class NetworkController {
 
     protected static String TAG = "NetworkController";
 
-    public static final String CHECK_PATH_URL = "/bookingService/checkPath";
+    private static final String CHECK_PATH_URL = "/bookingService/checkPath";
+    private static final int TIMEOUT_MS = 10000;
+    private static final int MAX_RETRIES = 0;
+
     private static NetworkController instance;
 
     private RequestQueue requestQueue;
@@ -42,6 +46,7 @@ public class NetworkController {
     }
 
     public <T> void addToRequestQueue(Request<T> request) {
+        request.setRetryPolicy( new DefaultRetryPolicy(TIMEOUT_MS,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(request);
     }
 
