@@ -45,6 +45,8 @@ import com.zano.shareride.network.checkpath.CheckPathResponse;
 import com.zano.shareride.network.common.AdditionalInfo;
 import com.zano.shareride.network.common.EnumStatus;
 import com.zano.shareride.network.common.UserInfo;
+import com.zano.shareride.network.confirmrequest.ConfirmRequestRequest;
+import com.zano.shareride.network.confirmrequest.ConfirmRequestResponse;
 import com.zano.shareride.util.Constants;
 
 import org.joda.time.LocalDate;
@@ -76,6 +78,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
     private Marker markerFinish;
 
     private boolean routeChecked;
+    private String requestId;
 
     @BindView(R.id.check_button) protected Button checkButton;
     @BindView(R.id.confirm_button) protected Button confirmButton;
@@ -92,6 +95,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         markerStart = null;
         markerFinish = null;
         routeChecked = false;
+        requestId = null;
     }
 
     @Override
@@ -212,6 +216,24 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
             }
         });
 
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConfirmRequestRequest confirmRequest = new ConfirmRequestRequest();
+                confirmRequest.setRequestId(requestId);
+                showProgressDialog(R.string.dialog_confirming);
+                NetworkController.getInstance(MapActivity.this).addConfirmRequestRequest(confirmRequest, new Response.Listener<ConfirmRequestResponse>() {
+                    @Override
+                    public void onResponse(ConfirmRequestResponse response) {
+                        closeProgressDialog();
+                        routeChecked = false;
+                        requestId = null;
+                        showToast(R.string.toast_path_confirmed, false);
+                    }
+                },null);
+            }
+        });
+
     }
 
     private CheckPathRequest createCheckPathRequest(boolean deliveryTime, int numberOfSeats, LocalDate date, LocalTime time, String name, String userId) {
@@ -264,7 +286,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         } else {
             checkButton.setEnabled(false);
         }
-        if (routeChecked) {
+        if (routeChecked && requestId != null) {
             confirmButton.setEnabled(true);
         }
     }
@@ -460,9 +482,12 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
             public void onResponse(CheckPathResponse response) {
                 closeProgressDialog();
                 if(response.getStatus().equals(EnumStatus.ACCEPTED)){
-                    //TODO use the path came back response
+                    //TODO use the path that came back response
                     routeChecked = true;
+                    requestId = response.getRequestId();
+                    markerStart.remove();
                     markerStart = null;
+                    markerFinish.remove();
                     markerFinish = null;
                     showToast(getString(R.string.dialog_path_available), false);
                 } else {

@@ -35,4 +35,6 @@
     <string name="dialog_path_available">Path available!</string>
     <string name="dialog_checking">Checking…</string>
     <string name="dialog_path_not_available">Path not available!</string>
+    <string name="dialog_confirming">Confirming…</string>
+    <string name="toast_path_confirmed">Path confirmed!</string>
 </resources>

@@ -11,6 +11,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.zano.shareride.network.checkpath.CheckPathRequest;
 import com.zano.shareride.network.checkpath.CheckPathResponse;
+import com.zano.shareride.network.confirmrequest.ConfirmRequestRequest;
+import com.zano.shareride.network.confirmrequest.ConfirmRequestResponse;
 import com.zano.shareride.util.PropertiesReader;
 
 import java.util.Properties;
@@ -24,6 +26,7 @@ public class NetworkController {
     protected static String TAG = "NetworkController";
 
     private static final String CHECK_PATH_URL = "/bookingService/checkPath";
+    private static final String CONFIRM_REQUEST_URL = "/bookingService/confirmRequest";
     private static final int TIMEOUT_MS = 10000;
     private static final int MAX_RETRIES = 0;
 
@@ -45,7 +48,7 @@ public class NetworkController {
         return instance;
     }
 
-    public <T> void addToRequestQueue(Request<T> request) {
+    private <T> void addToRequestQueue(Request<T> request) {
         request.setRetryPolicy( new DefaultRetryPolicy(TIMEOUT_MS,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(request);
     }
@@ -55,6 +58,14 @@ public class NetworkController {
         String url = serverBasePath + CHECK_PATH_URL;
         GsonRequest request = new GsonRequest(Request.Method.POST, url, checkPathRequest, listener, errorListener != null ? errorListener : new DefaultErrorListener(), CheckPathResponse.class);
         Log.d(TAG,"Enqueuing a request to: " + url + ", REQUEST: " + checkPathRequest);
+        addToRequestQueue(request);
+    }
+
+    public void addConfirmRequestRequest(ConfirmRequestRequest confirmRequestRequest, Response.Listener<ConfirmRequestResponse> listener, Response.ErrorListener errorListener){
+
+        String url = serverBasePath + CONFIRM_REQUEST_URL;
+        GsonRequest request = new GsonRequest(Request.Method.POST, url, confirmRequestRequest, listener, errorListener != null ? errorListener : new DefaultErrorListener(), ConfirmRequestResponse.class);
+        Log.d(TAG,"Enqueuing a request to: " + url + ", REQUEST: " + confirmRequestRequest);
         addToRequestQueue(request);
     }
 
