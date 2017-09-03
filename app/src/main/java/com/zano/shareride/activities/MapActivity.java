@@ -228,6 +228,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
                         closeProgressDialog();
                         routeChecked = false;
                         requestId = null;
+                        enableButtons();
                         showToast(R.string.toast_path_confirmed, false);
                     }
                 },null);
@@ -288,6 +289,8 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         }
         if (routeChecked && requestId != null) {
             confirmButton.setEnabled(true);
+        } else {
+            confirmButton.setEnabled(false);
         }
     }
 
