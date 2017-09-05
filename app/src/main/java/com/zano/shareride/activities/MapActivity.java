@@ -79,6 +79,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
 
     private boolean routeChecked;
     private String requestId;
+    private String routeId;
 
     @BindView(R.id.check_button) protected Button checkButton;
     @BindView(R.id.confirm_button) protected Button confirmButton;
@@ -96,6 +97,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
         markerFinish = null;
         routeChecked = false;
         requestId = null;
+        routeId = null;
     }
 
     @Override
@@ -115,7 +117,6 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API);
     }
-
 
     @Override
     protected int layoutId() {
@@ -221,6 +222,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 ConfirmRequestRequest confirmRequest = new ConfirmRequestRequest();
                 confirmRequest.setRequestId(requestId);
+                confirmRequest.setRouteId(routeId);
                 showProgressDialog(R.string.dialog_confirming);
                 NetworkController.getInstance(MapActivity.this).addConfirmRequestRequest(confirmRequest, new Response.Listener<ConfirmRequestResponse>() {
                     @Override
@@ -228,6 +230,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
                         closeProgressDialog();
                         routeChecked = false;
                         requestId = null;
+                        routeId = null;
                         enableButtons();
                         showToast(R.string.toast_path_confirmed, false);
                     }
@@ -488,6 +491,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
                     //TODO use the path that came back response
                     routeChecked = true;
                     requestId = response.getRequestId();
+                    routeId = response.getRouteId();
                     markerStart.remove();
                     markerStart = null;
                     markerFinish.remove();

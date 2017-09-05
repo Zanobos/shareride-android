@@ -10,6 +10,7 @@ import com.zano.shareride.network.common.EnumStatus;
 public class CheckPathResponse extends BaseResponse{
 
     private String requestId;
+    private String routeId;
     private EnumStatus status;
 
     public String getRequestId() {
@@ -18,6 +19,14 @@ public class CheckPathResponse extends BaseResponse{
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public String getRouteId() {
+        return routeId;
+    }
+
+    public void setRouteId(String routeId) {
+        this.routeId = routeId;
     }
 
     public EnumStatus getStatus() {
