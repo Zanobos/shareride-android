@@ -234,7 +234,14 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
                         enableButtons();
                         showToast(R.string.toast_path_confirmed, false);
                     }
-                },null);
+                },new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        closeProgressDialog();
+                        Log.e(TAG, "onConfirmPathResponse:" + error.getMessage(), error);
+                        showToast(R.string.toast_error, false);
+                    }
+                });
             }
         });
 
@@ -507,8 +514,8 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
             @Override
             public void onErrorResponse(VolleyError error) {
                 closeProgressDialog();
-                Log.e(TAG, "onErrorResponse:" + error.getMessage(), error);
-                showToast("An error occured!", false);
+                Log.e(TAG, "onCheckPathResponse:" + error.getMessage(), error);
+                showToast(R.string.toast_error, false);
             }
         });
     }
