@@ -126,6 +126,7 @@ public class RouteDetailsFragment extends DialogFragment {
             }
         });
 
+        seatsPicker.setText("1");
         seatsPicker.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
