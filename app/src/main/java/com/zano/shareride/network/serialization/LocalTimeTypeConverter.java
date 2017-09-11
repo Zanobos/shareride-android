@@ -20,7 +20,7 @@ import java.lang.reflect.Type;
 
 public class LocalTimeTypeConverter implements JsonSerializer<LocalTime>, JsonDeserializer<LocalTime> {
 
-    private static final DateTimeFormatter TIME_FORMAT = ISODateTimeFormat.timeNoMillis();
+    private static final DateTimeFormatter TIME_FORMAT = ISODateTimeFormat.hourMinuteSecond();
 
     @Override
     public LocalTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {

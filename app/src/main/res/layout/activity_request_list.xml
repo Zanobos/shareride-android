@@ -18,26 +18,8 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <Button
-            android:id="@+id/my_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/map" />
-
-        <Button
-            android:id="@+id/signout_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="signout" />
-
-        <Button
-            android:id="@+id/user_request_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="request" />
-
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/my_recycler_view"
+            android:id="@+id/user_request_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"

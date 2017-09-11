@@ -13,6 +13,8 @@ import com.zano.shareride.network.checkpath.CheckPathRequest;
 import com.zano.shareride.network.checkpath.CheckPathResponse;
 import com.zano.shareride.network.confirmrequest.ConfirmRequestRequest;
 import com.zano.shareride.network.confirmrequest.ConfirmRequestResponse;
+import com.zano.shareride.network.userrequestlist.UserRequestListRequest;
+import com.zano.shareride.network.userrequestlist.UserRequestListResponse;
 import com.zano.shareride.util.PropertiesReader;
 
 import java.util.Properties;
@@ -27,6 +29,7 @@ public class NetworkController {
 
     private static final String CHECK_PATH_URL = "/bookingService/checkPath";
     private static final String CONFIRM_REQUEST_URL = "/bookingService/confirmRequest";
+    private static final String USER_REQUEST_LIST_URL = "/bookingService/userRequestList";
     private static final int TIMEOUT_MS = 10000;
     private static final int MAX_RETRIES = 0;
 
@@ -66,6 +69,14 @@ public class NetworkController {
         String url = serverBasePath + CONFIRM_REQUEST_URL;
         GsonRequest request = new GsonRequest(Request.Method.POST, url, confirmRequestRequest, listener, errorListener != null ? errorListener : new DefaultErrorListener(), ConfirmRequestResponse.class);
         Log.d(TAG,"Enqueuing a request to: " + url + ", REQUEST: " + confirmRequestRequest);
+        addToRequestQueue(request);
+    }
+
+    public void addUserRequestListRequest(UserRequestListRequest userRequestListRequest, Response.Listener<UserRequestListResponse> listener, Response.ErrorListener errorListener){
+
+        String url = serverBasePath + USER_REQUEST_LIST_URL;
+        GsonRequest request = new GsonRequest(Request.Method.POST, url, userRequestListRequest, listener, errorListener != null ? errorListener : new DefaultErrorListener(), UserRequestListResponse.class);
+        Log.d(TAG,"Enqueuing a request to: " + url + ", REQUEST: " + userRequestListRequest);
         addToRequestQueue(request);
     }
 

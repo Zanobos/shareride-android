@@ -2,47 +2,27 @@ package com.zano.shareride.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.zano.shareride.R;
 import com.zano.shareride.adapters.BaseRecyclerAdapter;
 import com.zano.shareride.adapters.ExampleAdapter;
-import com.zano.shareride.util.Constants;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import butterknife.BindView;
 
-public class MainActivity extends AuthenticatedActivity {
+public class MainActivity extends UserLoggedActivity {
 
     private BaseRecyclerAdapter adapter;
 
     @BindView(R.id.my_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.my_button) Button button;
     @BindView(R.id.signout_button) Button signoutBtn;
-
-    @Override
-    protected FirebaseAuth.AuthStateListener initializeFireBaseAuthListener() {
-        return new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user == null) {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    startActivityForResult(intent, Constants.RequestCodes.ACTIVITIES_LOGIN);
-                }
-            }
-        };
-    }
+    @BindView(R.id.user_request_button) Button userRequestsBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +45,14 @@ public class MainActivity extends AuthenticatedActivity {
                 signOut();
             }
         });
+
+        userRequestsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RequestListActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -78,4 +66,8 @@ public class MainActivity extends AuthenticatedActivity {
     }
 
 
+    @Override
+    protected void userReady() {
+
+    }
 }
