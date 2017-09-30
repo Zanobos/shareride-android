@@ -1,6 +1,6 @@
 package com.zano.shareride.network.common;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by Zano on 10/09/2017, 17:59.
@@ -13,8 +13,7 @@ public class UserRequest {
     private Location proposedPickup;
     private Location askedDevilery;
     private Location proposedDevilery;
-
-    private Set<GeoPoint> path;
+    private List<GeoPoint> path;
 
     public String getRequestId() {
         return requestId;
@@ -56,11 +55,11 @@ public class UserRequest {
         this.proposedDevilery = proposedDevilery;
     }
 
-    public Set<GeoPoint> getPath() {
+    public List<GeoPoint> getPath() {
         return path;
     }
 
-    public void setPath(Set<GeoPoint> path) {
+    public void setPath(List<GeoPoint> path) {
         this.path = path;
     }
 

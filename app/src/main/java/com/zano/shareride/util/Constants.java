@@ -3,6 +3,9 @@ package com.zano.shareride.util;
 import android.support.annotation.IntDef;
 import android.support.annotation.StringDef;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+
 /**
  * Created by Zano on 06/06/2017, 18:30.
  */
@@ -12,11 +15,13 @@ public class Constants {
     @StringDef({
             ParcelArgs.NAMECLASS,
             ParcelArgs.LOCATION,
-            ParcelArgs.CAMERA_POSITION})
+            ParcelArgs.CAMERA_POSITION,
+            ParcelArgs.USER_REQUEST})
     public @interface ParcelArgs {
         String NAMECLASS = "NAMECLASS";
         String LOCATION = "LOCATION";
         String CAMERA_POSITION = "CAMERA_POSITION";
+        String USER_REQUEST = "USER_REQUEST";
     }
 
     @IntDef({
@@ -37,5 +42,12 @@ public class Constants {
             Scale.LATLONG})
     public @interface Scale {
         int LATLONG = 6;
+    }
+
+    public @interface ParcelNullValues {
+        String NULL_STRING = "NULLVALUE";
+        double NULL_COORD = -1.0;
+        LocalDate NULL_DATE = LocalDate.parse("1900");
+        LocalTime NULL_TIME = LocalTime.parse("00:00:00.000");
     }
 }

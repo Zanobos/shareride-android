@@ -14,6 +14,8 @@ import com.zano.shareride.network.NetworkController;
 import com.zano.shareride.network.common.UserRequest;
 import com.zano.shareride.network.userrequestlist.UserRequestListRequest;
 import com.zano.shareride.network.userrequestlist.UserRequestListResponse;
+import com.zano.shareride.util.Constants;
+import com.zano.shareride.util.parcelables.ParcelableUserRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -76,6 +78,8 @@ public class RequestListActivity extends UserLoggedActivity {
             @Override
             public void onDataClicked(UserRequest data) {
                 Intent intent = new Intent(RequestListActivity.this, MapRequestDetailActivity.class);
+                ParcelableUserRequest parcelableUserRequest = new ParcelableUserRequest(data);
+                intent.putExtra(Constants.ParcelArgs.USER_REQUEST,parcelableUserRequest);
                 startActivity(intent);
             }
         };
