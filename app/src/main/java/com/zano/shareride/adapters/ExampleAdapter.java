@@ -42,10 +42,10 @@ public class ExampleAdapter extends FirebaseRecyclerAdapter<ExampleAdapter.ViewH
         Log.d(TAG,"Changed: " + value);
     }
 
-    public class ViewHolder extends BaseRecyclerAdapter.ViewHolder {
+    class ViewHolder extends BaseRecyclerAdapter.ViewHolder {
         @BindView(R.id.my_textview_example) TextView textViewExample;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
         }
     }

@@ -20,7 +20,7 @@ public abstract class FirebaseRecyclerAdapter<FMVH extends BaseRecyclerAdapter.V
     private DatabaseReference reference;
     private Class<FD> clazz;
 
-    public FirebaseRecyclerAdapter(Context context, int listItemLayoutId, Map data, String referencePath, Class<FD> clazz) {
+    FirebaseRecyclerAdapter(Context context, int listItemLayoutId, Map data, String referencePath, Class<FD> clazz) {
         super(context, listItemLayoutId, data);
         this.clazz = clazz;
         this.reference = FirebaseDatabase.getInstance().getReference(referencePath);

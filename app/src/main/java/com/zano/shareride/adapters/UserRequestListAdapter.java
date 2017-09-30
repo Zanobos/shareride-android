@@ -21,6 +21,10 @@ public class UserRequestListAdapter extends BaseRecyclerAdapter<UserRequestListA
         super(context, R.layout.listitem_user_request, data);
     }
 
+    public UserRequestListAdapter(Context context,Map<String, UserRequest> data,DataClickListener<UserRequest> listener) {
+        super(context, R.layout.listitem_user_request, data,listener);
+    }
+
     @Override
     protected ViewHolder createViewHolder(View itemView) {
         return new ViewHolder(itemView);
@@ -36,11 +40,12 @@ public class UserRequestListAdapter extends BaseRecyclerAdapter<UserRequestListA
         return "RequestListAdapter";
     }
 
-    public class ViewHolder extends BaseRecyclerAdapter.ViewHolder {
+    class ViewHolder extends BaseRecyclerAdapter.ViewHolder {
         @BindView(R.id.listitem_user_request_tv_date) TextView dateTV;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
         }
     }
+
 }

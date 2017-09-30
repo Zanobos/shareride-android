@@ -21,18 +21,32 @@ public abstract class BaseRecyclerAdapter<MVH extends BaseRecyclerAdapter.ViewHo
     protected Context context;
     protected int listItemLayoutId;
     protected Map<String, D> data;
+    protected DataClickListener<D> listener; //This listener is ONLY to detect click on the data as a WHOLE (not a button inside the view, for example)
 
-    public BaseRecyclerAdapter(Context context, int listItemLayoutId, Map<String,D> data) {
+    BaseRecyclerAdapter(Context context, int listItemLayoutId, Map<String, D> data) {
         this.context = context;
         this.listItemLayoutId = listItemLayoutId;
         this.data = data;
         this.TAG = setTag();
     }
 
+    BaseRecyclerAdapter(Context context, int listItemLayoutId, Map<String, D> data, DataClickListener<D> listener) {
+        this(context,listItemLayoutId,data);
+        this.listener = listener;
+    }
+
     @Override
     public void onBindViewHolder(BaseRecyclerAdapter.ViewHolder holder, int position) {
-        D data = new ArrayList<>(this.data.values()).get(position);
+        final D data = new ArrayList<>(this.data.values()).get(position);
         if(data!=null) {
+            if(listener != null) {
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onDataClicked(data);
+                    }
+                });
+            }
             onBindViewHolder((MVH)holder,data);
         }
     }
@@ -48,8 +62,8 @@ public abstract class BaseRecyclerAdapter<MVH extends BaseRecyclerAdapter.ViewHo
         return data.size();
     }
 
-    public abstract class ViewHolder extends RecyclerView.ViewHolder {
-        public ViewHolder(View itemView) {
+    abstract class ViewHolder extends RecyclerView.ViewHolder {
+        ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
         }
@@ -61,5 +75,7 @@ public abstract class BaseRecyclerAdapter<MVH extends BaseRecyclerAdapter.ViewHo
 
     protected abstract String setTag();
 
-
+    public interface DataClickListener<D> {
+        void onDataClicked(D data);
+    }
 }

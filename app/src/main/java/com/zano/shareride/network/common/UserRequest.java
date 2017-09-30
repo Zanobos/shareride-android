@@ -1,5 +1,7 @@
 package com.zano.shareride.network.common;
 
+import java.util.Set;
+
 /**
  * Created by Zano on 10/09/2017, 17:59.
  */
@@ -11,6 +13,8 @@ public class UserRequest {
     private Location proposedPickup;
     private Location askedDevilery;
     private Location proposedDevilery;
+
+    private Set<GeoPoint> path;
 
     public String getRequestId() {
         return requestId;
@@ -50,6 +54,14 @@ public class UserRequest {
 
     public void setProposedDevilery(Location proposedDevilery) {
         this.proposedDevilery = proposedDevilery;
+    }
+
+    public Set<GeoPoint> getPath() {
+        return path;
+    }
+
+    public void setPath(Set<GeoPoint> path) {
+        this.path = path;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.zano.shareride.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,6 +28,7 @@ public class RequestListActivity extends UserLoggedActivity {
 
     private BaseRecyclerAdapter adapter;
     private Map<String,UserRequest> map;
+    private BaseRecyclerAdapter.DataClickListener<UserRequest> dataClickListener;
 
     @BindView(R.id.user_request_recycler_view) RecyclerView recyclerView;
 
@@ -70,7 +72,14 @@ public class RequestListActivity extends UserLoggedActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         map = new HashMap<>();
-        adapter = new UserRequestListAdapter(RequestListActivity.this, map);
+        dataClickListener = new BaseRecyclerAdapter.DataClickListener<UserRequest>() {
+            @Override
+            public void onDataClicked(UserRequest data) {
+                Intent intent = new Intent(RequestListActivity.this, MapRequestDetailActivity.class);
+                startActivity(intent);
+            }
+        };
+        adapter = new UserRequestListAdapter(RequestListActivity.this, map,dataClickListener);
         recyclerView.setAdapter(adapter);
     }
 }
