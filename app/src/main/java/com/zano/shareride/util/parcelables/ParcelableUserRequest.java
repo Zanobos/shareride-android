@@ -19,11 +19,12 @@ public class ParcelableUserRequest implements Parcelable {
 
     protected ParcelableUserRequest(Parcel in) {
         userRequest = new UserRequest();
-        userRequest.setAskedDevilery(((ParcelableLocation)in.readValue(ParcelableLocation.class.getClassLoader())).getLocation());
-        userRequest.setAskedPickup(((ParcelableLocation)in.readValue(ParcelableLocation.class.getClassLoader())).getLocation());
-        userRequest.setProposedDevilery(((ParcelableLocation)in.readValue(ParcelableLocation.class.getClassLoader())).getLocation());
-        userRequest.setProposedPickup(((ParcelableLocation)in.readValue(ParcelableLocation.class.getClassLoader())).getLocation());
+        userRequest.setAskedDevilery(((ParcelableLocation)in.readParcelable(ParcelableLocation.class.getClassLoader())).getLocation());
+        userRequest.setAskedPickup(((ParcelableLocation)in.readParcelable(ParcelableLocation.class.getClassLoader())).getLocation());
+        userRequest.setProposedDevilery(((ParcelableLocation)in.readParcelable(ParcelableLocation.class.getClassLoader())).getLocation());
+        userRequest.setProposedPickup(((ParcelableLocation)in.readParcelable(ParcelableLocation.class.getClassLoader())).getLocation());
         userRequest.setPath(ParcelableGeoPoint.convertParcelableList(in.createTypedArrayList(ParcelableGeoPoint.CREATOR)));
+        userRequest.setBoundingBox(((ParcelableBoundingBox)in.readParcelable(ParcelableBoundingBox.class.getClassLoader())).getBoundingBox());
     }
 
     public static final Creator<ParcelableUserRequest> CREATOR = new Creator<ParcelableUserRequest>() {
@@ -50,6 +51,7 @@ public class ParcelableUserRequest implements Parcelable {
         dest.writeParcelable(new ParcelableLocation(userRequest.getProposedDevilery()),flags);
         dest.writeParcelable(new ParcelableLocation(userRequest.getProposedPickup()),flags);
         dest.writeTypedList(ParcelableGeoPoint.convertList(userRequest.getPath()));
+        dest.writeParcelable(new ParcelableBoundingBox(userRequest.getBoundingBox()),flags);
     }
 
     public UserRequest getUserRequest() {

@@ -58,12 +58,18 @@ public class ParcelableLocation implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(location.getAddress() != null ? location.getAddress() : Constants.ParcelNullValues.NULL_STRING);
-        dest.writeString(location.getLocationName() != null ? location.getLocationName() : Constants.ParcelNullValues.NULL_STRING);
-        dest.writeDouble(location.getLat() != null ? location.getLat() : Constants.ParcelNullValues.NULL_COORD);
-        dest.writeDouble(location.getLon() != null ? location.getLon() : Constants.ParcelNullValues.NULL_COORD);
-        dest.writeSerializable(location.getDate() != null ? location.getDate() : Constants.ParcelNullValues.NULL_DATE);
-        dest.writeSerializable(location.getTime() != null ? location.getTime() : Constants.ParcelNullValues.NULL_TIME) ;
+        String address = location.getAddress() != null ? location.getAddress() : Constants.ParcelNullValues.NULL_STRING;
+        String locationName = location.getLocationName() != null ? location.getLocationName() : Constants.ParcelNullValues.NULL_STRING;
+        double latitude = location.getLat() != null ? location.getLat() : Constants.ParcelNullValues.NULL_COORD;
+        double longitude = location.getLon() != null ? location.getLon() : Constants.ParcelNullValues.NULL_COORD;
+        LocalDate localDate = location.getDate() != null ? location.getDate() : Constants.ParcelNullValues.NULL_DATE;
+        LocalTime localTime = location.getTime() != null ? location.getTime() : Constants.ParcelNullValues.NULL_TIME;
+        dest.writeString(address);
+        dest.writeString(locationName);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
+        dest.writeSerializable(localDate);
+        dest.writeSerializable(localTime) ;
     }
 
     public Location getLocation() {

@@ -14,6 +14,7 @@ public class UserRequest {
     private Location askedDevilery;
     private Location proposedDevilery;
     private List<GeoPoint> path;
+    private BoundingBox boundingBox;
 
     public String getRequestId() {
         return requestId;
@@ -63,6 +64,14 @@ public class UserRequest {
         this.path = path;
     }
 
+    public BoundingBox getBoundingBox() {
+        return boundingBox;
+    }
+
+    public void setBoundingBox(BoundingBox boundingBox) {
+        this.boundingBox = boundingBox;
+    }
+
     @Override
     public String toString() {
         return "UserRequest{" +
@@ -71,6 +80,9 @@ public class UserRequest {
                 ", proposedPickup=" + proposedPickup +
                 ", askedDevilery=" + askedDevilery +
                 ", proposedDevilery=" + proposedDevilery +
+                ", path=" + path +
+                ", boundingBox=" + boundingBox +
                 '}';
     }
+
 }

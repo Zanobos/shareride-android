@@ -6,8 +6,17 @@ package com.zano.shareride.network.common;
 
 public class GeoPoint {
 
+    private Integer position;
     private Double latitude;
     private Double longitude;
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
 
     public Double getLatitude() {
         return latitude;
@@ -28,8 +37,10 @@ public class GeoPoint {
     @Override
     public String toString() {
         return "GeoPoint{" +
-                "latitude=" + latitude +
+                "position=" + position +
+                ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 '}';
     }
+
 }

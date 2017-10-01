@@ -26,7 +26,7 @@ public class ParcelableGeoPoint implements Parcelable {
         double latitude = in.readDouble();
         double longitude = in.readDouble();
         geoPoint.setLatitude(latitude != Constants.ParcelNullValues.NULL_COORD ? latitude : null);
-        geoPoint.setLatitude(longitude != Constants.ParcelNullValues.NULL_COORD ? longitude : null);
+        geoPoint.setLongitude(longitude != Constants.ParcelNullValues.NULL_COORD ? longitude : null);
     }
 
     public static final Creator<ParcelableGeoPoint> CREATOR = new Creator<ParcelableGeoPoint>() {
@@ -48,12 +48,14 @@ public class ParcelableGeoPoint implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeDouble(geoPoint.getLatitude() != null ? geoPoint.getLatitude() : Constants.ParcelNullValues.NULL_COORD);
-        dest.writeDouble(geoPoint.getLongitude() != null ? geoPoint.getLongitude() : Constants.ParcelNullValues.NULL_COORD);
+        double latitude = geoPoint.getLatitude() != null ? geoPoint.getLatitude() : Constants.ParcelNullValues.NULL_COORD;
+        double longitude = geoPoint.getLongitude() != null ? geoPoint.getLongitude() : Constants.ParcelNullValues.NULL_COORD;
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
     }
 
-    public static List<ParcelableGeoPoint> convertList(List<GeoPoint> geoPointList) {
-        List<ParcelableGeoPoint> parcelableGeoPointList = new ArrayList<>();
+    public static ArrayList<ParcelableGeoPoint> convertList(List<GeoPoint> geoPointList) {
+        ArrayList<ParcelableGeoPoint> parcelableGeoPointList = new ArrayList<>();
         for(GeoPoint geoPoint : geoPointList){
             parcelableGeoPointList.add(new ParcelableGeoPoint(geoPoint));
         }
@@ -61,8 +63,8 @@ public class ParcelableGeoPoint implements Parcelable {
         return parcelableGeoPointList;
     }
 
-    public static List<GeoPoint> convertParcelableList(List<ParcelableGeoPoint> parcelableGeoPointList) {
-        List<GeoPoint> geoPoints = new ArrayList<>();
+    public static ArrayList<GeoPoint> convertParcelableList(List<ParcelableGeoPoint> parcelableGeoPointList) {
+        ArrayList<GeoPoint> geoPoints = new ArrayList<>();
         for(ParcelableGeoPoint parcelableGeoPoint : parcelableGeoPointList){
             geoPoints.add(parcelableGeoPoint.getGeoPoint());
         }
