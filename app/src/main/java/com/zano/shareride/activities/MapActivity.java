@@ -263,6 +263,7 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
             pickup.setAddress(place.getAddress().toString());
             pickup.setLocationName(place.getName().toString());
         }
+        pickup.setDate(date);
         checkPathRequest.setPickup(pickup);
 
         com.zano.shareride.network.common.Location delivery = new com.zano.shareride.network.common.Location();
@@ -273,13 +274,12 @@ public class MapActivity extends GoogleAPIActivity implements OnMapReadyCallback
             delivery.setAddress(place.getAddress().toString());
             delivery.setLocationName(place.getName().toString());
         }
+        delivery.setDate(date);
         checkPathRequest.setDelivery(delivery);
 
         if (deliveryTime) {
-            delivery.setDate(date);
             delivery.setTime(time);
         } else {
-            pickup.setDate(date);
             pickup.setTime(time);
         }
 

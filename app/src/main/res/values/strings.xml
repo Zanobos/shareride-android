@@ -42,4 +42,8 @@
     <string name="title_activity_user_request">User Requests</string>
     <string name="dialog_loading">Loading…</string>
     <string name="title_activity_map_request_detail">Request detail</string>
+    <string name="listitem_user_request_tv_pickup_label">Pickup</string>
+    <string name="listitem_user_request_tv_delivery_label">Delivery</string>
+    <string name="listitem_user_request_tv_time_label">Time</string>
+    <string name="listitem_user_request_tv_address_label">Address</string>
 </resources>

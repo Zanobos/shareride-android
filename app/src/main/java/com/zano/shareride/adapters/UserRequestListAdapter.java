@@ -32,7 +32,12 @@ public class UserRequestListAdapter extends BaseRecyclerAdapter<UserRequestListA
 
     @Override
     protected void onBindViewHolder(ViewHolder holder, UserRequest data) {
-        holder.dateTV.setText(data.getAskedDevilery().getTime().toString());
+        holder.pickupDateTV.setText(data.getProposedPickup().getDate().toString());
+        holder.pickupTimeTV.setText(data.getProposedPickup().getTime().toString());
+        holder.pickupAddressTV.setText(data.getProposedPickup().getAddress());
+        holder.deliveryDateTV.setText(data.getProposedDevilery().getDate().toString());
+        holder.deliveryTimeTV.setText(data.getProposedDevilery().getTime().toString());
+        holder.deliveryAddressTV.setText(data.getProposedDevilery().getAddress());
     }
 
     @Override
@@ -41,7 +46,12 @@ public class UserRequestListAdapter extends BaseRecyclerAdapter<UserRequestListA
     }
 
     class ViewHolder extends BaseRecyclerAdapter.ViewHolder {
-        @BindView(R.id.listitem_user_request_tv_date) TextView dateTV;
+        @BindView(R.id.listitem_user_request_tv_pickup_date) TextView pickupDateTV;
+        @BindView(R.id.listitem_user_request_tv_pickup_time) TextView pickupTimeTV;
+        @BindView(R.id.listitem_user_request_tv_pickup_address) TextView pickupAddressTV;
+        @BindView(R.id.listitem_user_request_tv_delivery_date) TextView deliveryDateTV;
+        @BindView(R.id.listitem_user_request_tv_delivery_time) TextView deliveryTimeTV;
+        @BindView(R.id.listitem_user_request_tv_delivery_address) TextView deliveryAddressTV;
 
         ViewHolder(View itemView) {
             super(itemView);
