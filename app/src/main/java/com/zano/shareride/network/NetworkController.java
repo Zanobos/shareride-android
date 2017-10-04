@@ -30,18 +30,19 @@ public class NetworkController {
     private static final String CHECK_PATH_URL = "/bookingService/checkPath";
     private static final String CONFIRM_REQUEST_URL = "/bookingService/confirmRequest";
     private static final String USER_REQUEST_LIST_URL = "/bookingService/userRequestList";
-    private static final int TIMEOUT_MS = 10000;
-    private static final int MAX_RETRIES = 0;
-
     private static NetworkController instance;
 
     private RequestQueue requestQueue;
     private String serverBasePath;
+    private int maxRetries;
+    private int timeOutMilliseconds ;
 
     private NetworkController(Context context) {
         requestQueue  = Volley.newRequestQueue(context.getApplicationContext());
         Properties properties = new PropertiesReader(context).getProperties();
         serverBasePath = properties.getProperty("server.address") + properties.getProperty("server.base.path");
+        maxRetries = Integer.parseInt(properties.getProperty("server.max.retries"));
+        timeOutMilliseconds = Integer.parseInt(properties.getProperty("server.timeout.milliseconds"));
     }
 
     public static NetworkController getInstance(Context context) {
@@ -52,7 +53,7 @@ public class NetworkController {
     }
 
     private <T> void addToRequestQueue(Request<T> request) {
-        request.setRetryPolicy( new DefaultRetryPolicy(TIMEOUT_MS,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        request.setRetryPolicy( new DefaultRetryPolicy(timeOutMilliseconds,maxRetries,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(request);
     }
 
