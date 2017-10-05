@@ -35,9 +35,9 @@ public class UserRequestListAdapter extends BaseRecyclerAdapter<UserRequestListA
         holder.pickupDateTV.setText(data.getProposedPickup().getDate().toString());
         holder.pickupTimeTV.setText(data.getProposedPickup().getTime().toString());
         holder.pickupAddressTV.setText(data.getProposedPickup().getAddress());
-        holder.deliveryDateTV.setText(data.getProposedDevilery().getDate().toString());
-        holder.deliveryTimeTV.setText(data.getProposedDevilery().getTime().toString());
-        holder.deliveryAddressTV.setText(data.getProposedDevilery().getAddress());
+        holder.deliveryDateTV.setText(data.getProposedDelivery().getDate().toString());
+        holder.deliveryTimeTV.setText(data.getProposedDelivery().getTime().toString());
+        holder.deliveryAddressTV.setText(data.getProposedDelivery().getAddress());
     }
 
     @Override

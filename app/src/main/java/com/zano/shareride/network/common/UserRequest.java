@@ -11,8 +11,8 @@ public class UserRequest {
     private String requestId;
     private Location askedPickup;
     private Location proposedPickup;
-    private Location askedDevilery;
-    private Location proposedDevilery;
+    private Location askedDelivery;
+    private Location proposedDelivery;
     private List<GeoPoint> path;
     private BoundingBox boundingBox;
 
@@ -40,20 +40,20 @@ public class UserRequest {
         this.proposedPickup = proposedPickup;
     }
 
-    public Location getAskedDevilery() {
-        return askedDevilery;
+    public Location getAskedDelivery() {
+        return askedDelivery;
     }
 
-    public void setAskedDevilery(Location askedDevilery) {
-        this.askedDevilery = askedDevilery;
+    public void setAskedDelivery(Location askedDelivery) {
+        this.askedDelivery = askedDelivery;
     }
 
-    public Location getProposedDevilery() {
-        return proposedDevilery;
+    public Location getProposedDelivery() {
+        return proposedDelivery;
     }
 
-    public void setProposedDevilery(Location proposedDevilery) {
-        this.proposedDevilery = proposedDevilery;
+    public void setProposedDelivery(Location proposedDelivery) {
+        this.proposedDelivery = proposedDelivery;
     }
 
     public List<GeoPoint> getPath() {
@@ -78,8 +78,8 @@ public class UserRequest {
                 "requestId='" + requestId + '\'' +
                 ", askedPickup=" + askedPickup +
                 ", proposedPickup=" + proposedPickup +
-                ", askedDevilery=" + askedDevilery +
-                ", proposedDevilery=" + proposedDevilery +
+                ", askedDelivery=" + askedDelivery +
+                ", proposedDelivery=" + proposedDelivery +
                 ", path=" + path +
                 ", boundingBox=" + boundingBox +
                 '}';

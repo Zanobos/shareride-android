@@ -55,6 +55,7 @@ public class RequestListActivity extends UserLoggedActivity {
                 new Response.Listener<UserRequestListResponse>() {
                     @Override
                     public void onResponse(UserRequestListResponse response) {
+                        map.clear();
                         map.putAll(response.getRequestMap());
                         adapter.notifyDataSetChanged();
                         closeProgressDialog();

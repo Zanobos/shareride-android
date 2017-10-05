@@ -9,6 +9,8 @@ public class GeoPoint {
     private Integer position;
     private Double latitude;
     private Double longitude;
+    private EnumRouteLocationType type;
+    private boolean userPath;
 
     public Integer getPosition() {
         return position;
@@ -34,12 +36,30 @@ public class GeoPoint {
         this.longitude = longitude;
     }
 
+    public EnumRouteLocationType getType() {
+        return type;
+    }
+
+    public void setType(EnumRouteLocationType type) {
+        this.type = type;
+    }
+
+    public boolean isUserPath() {
+        return userPath;
+    }
+
+    public void setUserPath(boolean userPath) {
+        this.userPath = userPath;
+    }
+
     @Override
     public String toString() {
         return "GeoPoint{" +
                 "position=" + position +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
+                ", type=" + type +
+                ", userPath=" + userPath +
                 '}';
     }
 
