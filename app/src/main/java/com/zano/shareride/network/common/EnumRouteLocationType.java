@@ -6,5 +6,5 @@ package com.zano.shareride.network.common;
 
 public enum EnumRouteLocationType {
 
-    START, END, PICKUPSHIPMENT, DELIVERSHIPMENT
+    START, END, PICKUPSHIPMENT, DELIVERSHIPMENT, NO_INFO;
 }

@@ -3,6 +3,8 @@ package com.zano.shareride.util;
 import android.support.annotation.IntDef;
 import android.support.annotation.StringDef;
 
+import com.zano.shareride.network.common.EnumRouteLocationType;
+
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
@@ -49,5 +51,7 @@ public class Constants {
         double NULL_COORD = -1.0;
         LocalDate NULL_DATE = LocalDate.parse("1900");
         LocalTime NULL_TIME = LocalTime.parse("00:00:00.000");
+        int NULL_POSITION = -1;
+        EnumRouteLocationType NULL_ROUTE_TYPE = EnumRouteLocationType.NO_INFO;
     }
 }
